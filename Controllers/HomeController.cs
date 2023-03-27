@@ -13,7 +13,7 @@ namespace MpdaTest.Controllers
     {
         
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
             
         }
