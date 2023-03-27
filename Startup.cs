@@ -20,7 +20,15 @@ namespace MpdaTest
 
         public IConfiguration Configuration { get; }
 
-        
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // получаем строку подключения из файла конфигурации
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            // добавляем контекст ApplicationContext в качестве сервиса в приложение
+            
+            services.AddControllersWithViews();
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

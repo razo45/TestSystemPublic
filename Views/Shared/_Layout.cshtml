@@ -1,48 +1,336 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MpdaTest</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico">
+
+    <!-- CSS here -->
+
+
+
+
+    <link rel="stylesheet" href="~/NicepageAssets/css/TetsPage.css">
+    <link rel="stylesheet" href="~/NicepageAssets/css/CreateTS.css">
+    <link rel="stylesheet" href="~/NicepageAssets/css/nicepage.css">
+    <link rel="stylesheet" href="~/css/main.min.css">
+    <link rel="stylesheet" href="~/css/style.css">
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MpdaTest</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+      <header class="u-clearfix u-header u-header" id="sec-e161">
+
+           <div class="header__top">
+        <div class="container container__header">
+            <div class="row ">
+                <div class="col-xl-5 col-lg-5 mobile-hide">
+                    <div class="header__social"><a href="https://vk.com/moscowtheologicalacademy " class="header__social-item header__social-item-vk" target="_blank"></a><a href="https://www.flickr.com/photos/mpda" class="header__social-item header__social-item-flickr" target="_blank"></a><a href="https://www.youtube.com/user/MPDAru" class="header__social-item header__social-item-youtube" target="_blank"></a><a href="https://soundcloud.com/mda-sound" class="header__social-item header__social-item-soundcloud" target="_blank"></a><a href="https://t.me/mda_channel" class="header__social-item header__social-item-telegram" target="_blank"></a></div>                </div>
+                <div class=" col-xl-7 col-lg-7 col-md-8 col-8">
+                    <div class="row">
+                <div class="col-xl-4 col-lg-4 mobile-hide">
+                                                <div class="header__adr">
+                                <span> Московская область, г. Сергиев Посад, Лавра, Академия</span>
+                            </div>
+                                        </div>
+                                <!-- <div class="langswsearch_mobile"> -->
+                <div class="col-xl-4 col-lg-4 col-md-8 col-8" style="margin-top: 8px;">
+                    <div class="langsw_item">
+                        <a href="@Url.Action("Home", "Exit")" title="Выход">
+                            <span class="langsw_caption">Выход<span>
+                        </span></span></a>
+                    </div>
+                <div class="langsw_item">
+
+                    <a href="@Url.Action("Home", "Index")" title="Главная">
+                      <span class="langsw_caption">Главная</span>
+                    </a>
+                </div>
+
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-4">
+                <div class="searchheader">
+                    <form id="searchform" method="get" action="https://mpda.ru/">
+                        <input type="text" class="search-field" name="s" placeholder="Искать...">
+                    </form>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                <br>
+
+
+
+
+                        <!--<a href="#" class="header__icon-eye d-sm-xs-none"></a>
+                        <a href="#" class="header__icon-loop"></a> -->
+                    </div>
+                </div>
+
+           <div class="mobile__hamb"></div>
+           <div class="mobile__menu">
+                <div class="header__menu">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-6 col-6">
+                            <div class="header__mobile-menu-block">
+                                <div class="header__menu-item" id="menu-item-1839"><a href="https://cloud.mpda.ru/s/service_schedules">Расписание богослужений</a></div>
+<div class="header__menu-item" id="menu-item-867"><a href="https://mpda.ru/history-of-academy/">История академии</a></div>
+<div class="header__menu-item" id="menu-item-924"><a href="https://mpda.ru/contacts/">Контакты</a></div>
+<div class="header__menu-item" id="menu-item-2103"><a href="http://home.mpda.ru">Вход в ЭИОС</a></div>
+<div class="header__menu-item" id="menu-item-18836"><a href="https://encourse.mpda.ru/">Курсы на английском языке</a></div>
+<div class="header__menu-item" id="menu-item-6990"><a href="https://mpda.ru/pozhertvovanija/banking-details/">Реквизиты</a></div>
+                            </div>
+                        </div>
+                        <div class="offset-xl-2 col-xl-4 col-lg-6 col-6">
+                            <div class="header__mobile-menu-block">
+                                <div class="header__menu-item" id="menu-item-927"><a href="https://mpda.ru/academic-chapels/">Академические храмы</a></div>
+<div class="header__menu-item" id="menu-item-930"><a href="https://mpda.ru/library/">Библиотека</a></div>
+<div class="header__menu-item" id="menu-item-929"><a href="https://mpda.ru/publishing-house/">Издательство</a></div>
+<div class="header__menu-item" id="menu-item-1921"><a href="https://mpda.ru/kinostudija/">Киностудия</a></div>
+<div class="header__menu-item" id="menu-item-3046"><a href="https://shop.mpda.ru"></a><a href="http://shop.mpda.ru" title="Магазин МДА" style="color: #f04b45; text-decoration: none">Магазин</a></div>
+<div class="header__menu-item" id="menu-item-928"><a href="https://mpda.ru/museum/">Музей</a></div>
+<div class="header__menu-item" id="menu-item-24542"><a href="https://bogoslov.ru/">Bogoslov.ru</a></div>
+                            </div>
+                        </div>
+                        <div class="offset-xl-2 col-xl-4 col-lg-6 col-6">
+                            <div class="header__mobile-menu-block">
+                                <div class="header__menu-item" id="menu-item-932"><a href="https://mpda.ru/academy-structure/">Структура академии</a></div>
+<div class="header__menu-item" id="menu-item-919"><a href="https://mpda.ru/for-applicant/">Абитуриенту</a></div>
+<div class="header__menu-item" id="menu-item-933"><a href="https://mpda.ru/educational-process/">Учебный процесс</a></div>
+<div class="header__menu-item" id="menu-item-19538"><a href="https://mpda.ru/pravila-povedenija-studentov/">Правила поведения студентов</a></div>
+<div class="header__menu-item" id="menu-item-16644"><a href="https://mpda.ru/education/distance-education-department/vypusknikam-proshlyh-let/">Выпускникам прошлых лет</a></div>
+<div class="header__menu-item" id="menu-item-9345"><a href="https://hram.mpda.ru/"></a><a href="https://hram.mpda.ru" title="Магазин МДА" style="color: #258b25; text-decoration: none">Подать записку</a></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile__menu-close"></div>
+            </div>
+            <div class="header__bottom">
+        <div class="container container__header">
+            <div class="row align-items-center">
+                <div class="col-xl-5 col-lg-5 col-md-6 col-12">
+                    <div class="header__logo">
+                        <a href="https://mpda.ru/"><img src="~/assets/img/Shape.svg" alt="logo"></a>
+                    </div>
+                </div>
+                <div class="col-12 d-xl-none d-lg-none d-md-none">
+                    <div class="header__social-mobile">
+                        <div class="header__social"><a href="https://vk.com/moscowtheologicalacademy " class="header__social-item header__social-item-vk"></a><a href="https://www.flickr.com/photos/mpda" class="header__social-item header__social-item-flickr"></a><a href="https://www.youtube.com/user/MPDAru" class="header__social-item header__social-item-youtube"></a><a href="https://soundcloud.com/mda-sound" class="header__social-item header__social-item-soundcloud"></a><a href="https://t.me/mda_channel" class="header__social-item header__social-item-telegram" target="_blank"></a></div>                    </div>
+                </div>
+                <!--<div class="col-xl-3 col-lg-3 col-md-5 col-7">
+                    <div class="header__logo-name">
+                        <img src="https://mpda.ru/wp-content/themes/mda/img/logo_name.png" alt="logo-name">
+                    </div>
+                </div>-->
+                <div class=" col-xl-7 col-lg-7 mobile-hide">
+                    <div class="header__menu">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4">
+                                <div class="header__menu-item" id="menu-item-1839"><a href="https://cloud.mpda.ru/s/service_schedules">Расписание богослужений</a></div>
+<div class="header__menu-item" id="menu-item-867"><a href="https://mpda.ru/history-of-academy/">История академии</a></div>
+<div class="header__menu-item" id="menu-item-924"><a href="https://mpda.ru/contacts/">Контакты</a></div>
+<div class="header__menu-item" id="menu-item-2103"><a href="http://home.mpda.ru">Вход в ЭИОС</a></div>
+<div class="header__menu-item" id="menu-item-18836"><a href="https://encourse.mpda.ru/">Курсы на английском языке</a></div>
+<div class="header__menu-item" id="menu-item-6990"><a href="https://mpda.ru/pozhertvovanija/banking-details/">Реквизиты</a></div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4">
+                                <div class="header__menu-item" id="menu-item-927"><a href="https://mpda.ru/academic-chapels/">Академические храмы</a></div>
+<div class="header__menu-item" id="menu-item-930"><a href="https://mpda.ru/library/">Библиотека</a></div>
+<div class="header__menu-item" id="menu-item-929"><a href="https://mpda.ru/publishing-house/">Издательство</a></div>
+<div class="header__menu-item" id="menu-item-1921"><a href="https://mpda.ru/kinostudija/">Киностудия</a></div>
+<div class="header__menu-item" id="menu-item-3046"><a href="https://shop.mpda.ru"></a><a href="http://shop.mpda.ru" title="Магазин МДА" style="color: #f04b45; text-decoration: none">Магазин</a></div>
+<div class="header__menu-item" id="menu-item-928"><a href="https://mpda.ru/museum/">Музей</a></div>
+<div class="header__menu-item" id="menu-item-24542"><a href="https://bogoslov.ru/">Bogoslov.ru</a></div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4">
+                                <div class="header__menu-item" id="menu-item-932"><a href="https://mpda.ru/academy-structure/">Структура академии</a></div>
+<div class="header__menu-item" id="menu-item-919"><a href="https://mpda.ru/for-applicant/">Абитуриенту</a></div>
+<div class="header__menu-item" id="menu-item-933"><a href="https://mpda.ru/educational-process/">Учебный процесс</a></div>
+<div class="header__menu-item" id="menu-item-19538"><a href="https://mpda.ru/pravila-povedenija-studentov/">Правила поведения студентов</a></div>
+<div class="header__menu-item" id="menu-item-16644"><a href="https://mpda.ru/education/distance-education-department/vypusknikam-proshlyh-let/">Выпускникам прошлых лет</a></div>
+<div class="header__menu-item" id="menu-item-9345"><a href="https://hram.mpda.ru/"></a><a href="https://hram.mpda.ru" title="Магазин МДА" style="color: #258b25; text-decoration: none">Подать записку</a></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
+    </div>
+    <div class="header__line">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+                    <div class="header__line-item"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - MpdaTest - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+
+      </header>
+
+            @RenderBody()
+
+
+  <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 col-12">
+                <div class="footer__top">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-5 col-md-7 col-12">
+                            <div class="footer__logo">
+                                <a href="https://mpda.ru/">
+                                    <img src="~/assets/img/Shape.svg" alt="logo">
+                                </a>
+                            </div>
+
+
+                        </div>
+                        <div class="col-xl-8 offset-xl-0 col-lg-7 offset-lg-5 col-md-5 col-12 footer-soc__wrap">
+                            <div class="footer__social"><a href="https://vk.com/moscowtheologicalacademy " class="header__social-item header__social-item-vk"></a><a href="https://www.flickr.com/photos/mpda" class="header__social-item header__social-item-flickr"></a><a href="https://www.youtube.com/user/MPDAru" class="header__social-item header__social-item-youtube"></a><a href="https://soundcloud.com/mda-sound" class="header__social-item header__social-item-soundcloud"></a><a href="https://t.me/mda_channel" class="header__social-item header__social-item-telegram" target="_blank"></a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer__line">
+                </div>
+                <div class="footer__menu">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-12">
+                            <div class="menu-podval-kolonka-1-container"><ul id="menu-podval-kolonka-1" class="menu"><div id="menu-item-1226" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1226 footer__menu-block footer__menu-block-slide"><div class="footer__title"><a href="https://mpda.ru/academic-chapels/">Академические храмы</a></div>
+<ul class="sub-menu">
+	<li id="menu-item-1223" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1223"><a href="https://mpda.ru/academic-chapels/academy-intersession-chapel/">Храм Покрова Богородицы</a></li>
+	<li id="menu-item-1225" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1225"><a href="https://mpda.ru/academic-chapels/seminary-chapel-john-climacus/">Храм прп. Иоанна Лествичника</a></li>
+	<li id="menu-item-1224" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1224"><a href="https://mpda.ru/academic-chapels/chapel-st-barbara-seminary-wing/">Храм вмцц. Варвары, Анастасии и мц. Акилины</a></li>
+	<li id="menu-item-25996" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25996"><a href="https://mpda.ru/academic-chapels/hram-korsunskoj-ikony-bozhiej-materi/">Храм Корсунской иконы Божией Матери</a></li>
+</ul>
+</div>
+<div id="menu-item-1840" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1840 footer__menu-block"><div class="footer__title"><a href="https://cloud.mpda.ru/index.php/s/services_schedule_archive">Расписания богослужений</a></div></div>
+<div id="menu-item-1233" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1233 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/history-of-academy/">История академии</a></div></div>
+<div id="menu-item-3047" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3047 footer__menu-block"><div class="footer__title"><a href="http://shop.mpda.ru">Магазин</a></div></div>
+<div id="menu-item-1234" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1234 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/museum/">Музей</a></div></div>
+<div id="menu-item-1235" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1235 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/activities/alumni-community/">Сообщество выпускников</a></div></div>
+<div id="menu-item-1236" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1236 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/publishing-house/">Издательство</a></div></div>
+<div id="menu-item-1237" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1237 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/library/">Библиотека</a></div></div>
+<div id="menu-item-8469" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8469 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/contacts/">Контакты</a></div></div>
+</ul></div>                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-12">
+                            <div class="menu-podval-kolonka-2-container"><ul id="menu-podval-kolonka-2" class="menu"><div id="menu-item-584" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-584 footer__menu-block footer__menu-block-slide"><div class="footer__title"><a href="https://mpda.ru/for-applicant/">Абитуриенту</a></div>
+<ul class="sub-menu">
+	<li id="menu-item-583" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-583"><a href="https://mpda.ru/for-applicant/what-do-i-do-to-enter/">Хочу поступить, что делать?</a></li>
+	<li id="menu-item-585" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-585"><a href="https://mpda.ru/for-applicant/admission-rules/">Правила приема</a></li>
+	<li id="menu-item-586" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-586"><a href="https://mpda.ru/for-applicant/step-by-step-application/">Пошаговый план для абитуриента</a></li>
+</ul>
+</div>
+<div id="menu-item-591" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-591 footer__menu-block footer__menu-block-slide"><div class="footer__title"><a href="https://mpda.ru/educational-process/">Учебный процесс</a></div>
+<ul class="sub-menu">
+	<li id="menu-item-590" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-590"><a href="https://mpda.ru/educational-process/undergraduate/">Бакалавриат</a></li>
+	<li id="menu-item-889" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-889"><a href="https://mpda.ru/educational-process/graduate/">Магистратура</a></li>
+	<li id="menu-item-25680" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25680"><a href="https://mpda.ru/educational-process/aspirantura/">Аспирантура</a></li>
+</ul>
+</div>
+<div id="menu-item-593" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-593 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/academy-structure/">Структура академии</a></div></div>
+</ul></div>                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-12">
+                            <div class="menu-podval-kolonka-3-container"><ul id="menu-podval-kolonka-3" class="menu"><div id="menu-item-604" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-604 footer__menu-block footer__menu-block-slide"><div class="footer__title"><a href="https://mpda.ru/education/">Образование</a></div>
+<ul class="sub-menu">
+	<li id="menu-item-887" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-887"><a href="https://mpda.ru/bogoslovsko-pastyrskij-fakultet/undergraduate/">Бакалавриат</a></li>
+	<li id="menu-item-1261" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1261"><a href="https://mpda.ru/bogoslovsko-pastyrskij-fakultet/graduate/">Магистратура</a></li>
+	<li id="menu-item-892" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-892"><a href="https://mpda.ru/bogoslovsko-pastyrskij-fakultet/postgraduate/">Аспирантура</a></li>
+	<li id="menu-item-12045" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12045"><a href="https://mpda.ru/news-heading/regentskij-fakultet/">Факультет Церковно-певческого искусства</a></li>
+	<li id="menu-item-12046" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12046"><a href="https://mpda.ru/news-heading/ikonopisnyj-fakultet/">Факультет иконописи и церковного искусства</a></li>
+	<li id="menu-item-609" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-609"><a href="https://mpda.ru/education/distance-education-department/">Отделение заочного обучения</a></li>
+	<li id="menu-item-12053" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12053"><a href="https://mpda.ru/news-heading/otdel-dopolnitelnogo-obrazovanija/">Отдел дополнительного образования</a></li>
+	<li id="menu-item-1710" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1710"><a href="~/sveden/">Сведения об образовательной организации</a></li>
+</ul>
+</div>
+<div id="menu-item-596" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-596 footer__menu-block footer__menu-block-slide"><div class="footer__title"><a href="https://mpda.ru/science/departments/">Кафедры</a></div>
+<ul class="sub-menu">
+	<li id="menu-item-12048" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12048"><a href="https://mpda.ru/news-heading/kafedra-bibleistiki/">Библеистики</a></li>
+	<li id="menu-item-12047" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12047"><a href="https://mpda.ru/news-heading/kafedra-bogoslovija/">Богословия</a></li>
+	<li id="menu-item-12050" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12050"><a href="https://mpda.ru/news-heading/kafedra-cerkovnoj-istorii/">Церковной истории</a></li>
+	<li id="menu-item-12051" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12051"><a href="https://mpda.ru/news-heading/kafedra-cerkovno-prakticheskih-disciplin/">Церковно-практических дисциплин</a></li>
+	<li id="menu-item-12049" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12049"><a href="https://mpda.ru/news-heading/kafedra-filologii/">Филологии</a></li>
+	<li id="menu-item-12052" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12052"><a href="https://mpda.ru/news-heading/kafedra-istorii-i-teorii-cerkovnogo-iskusstva/">Истории и теории церковного искусства</a></li>
+</ul>
+</div>
+</ul></div>                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-12">
+                            <div class="menu-podval-kolonka-4-container"><ul id="menu-podval-kolonka-4" class="menu"><div id="menu-item-612" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-612 footer__menu-block footer__menu-block-slide"><div class="footer__title"><a href="https://mpda.ru/science/">Наука</a></div>
+<ul class="sub-menu">
+	<li id="menu-item-12054" class="menu-item menu-item-type-taxonomy menu-item-object-news_heading menu-item-12054"><a href="https://mpda.ru/news-heading/dissertacionnyj-sovet/">Диссертационные советы</a></li>
+	<li id="menu-item-617" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-617"><a href="https://mpda.ru/science/research/">Исследования</a></li>
+	<li id="menu-item-616" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-616"><a href="https://mpda.ru/science/journals/">Научные журналы</a></li>
+</ul>
+</div>
+<div id="menu-item-618" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-618 footer__menu-block footer__menu-block-slide"><div class="footer__title"><a href="https://mpda.ru/activities/">Деятельность</a></div>
+<ul class="sub-menu">
+	<li id="menu-item-623" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-623"><a href="https://mpda.ru/activities/social-activities/">Социальная деятельность</a></li>
+	<li id="menu-item-622" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-622"><a href="https://mpda.ru/activities/worship/">Богослужения</a></li>
+	<li id="menu-item-620" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-620"><a href="https://mpda.ru/activities/student-life/">Студенческая жизнь</a></li>
+	<li id="menu-item-619" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-619"><a href="https://mpda.ru/activities/missionary-department/">Миссионерский отдел</a></li>
+	<li id="menu-item-1930" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1930"><a href="https://mpda.ru/activities/akademija-very/">Академия веры</a></li>
+</ul>
+</div>
+<div id="menu-item-1423" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1423 footer__menu-block"><div class="footer__title"><a href="http://old.mpda.ru/">СТАРЫЙ САЙТ МДА</a></div></div>
+<div id="menu-item-8950" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8950 footer__menu-block"><div class="footer__title"><a href="https://mpda.ru/pozhertvovanija/">Пожертвования</a></div></div>
+</ul></div>                        </div>
+                    </div>
+                </div>
+                <div class="footer__copyright">
+                    
+                                                <div class="footer__copyright-text">
+                                <p>© 2005-<script type="text/javascript">   document.write(new Date().getFullYear()); </script>2023, Религиозная организация - духовная образовательная организация высшего образования «Московская духовная академия Русской Православной Церкви». Все права защищены. При копировании материалов ссылка на сайт <a href="https://mpda.ru">https://mpda.ru</a> обязательна.</p>
+                            </div>
+                                                                        <div class="footer__copyright-text">
+                                <p><a href="~/contacts/">Адреса и контакты</a> ● <a href="~/terms-of-use/">Условия использования материалов</a> ● <a href="~/policy/">Политика конфиденциальности</a> ● <a href="~/sitemap.xml">Карта сайта</a></p>
+                            </div>
+                                            <div class="footer__copyright-text">
+                        Дизайн разработан <a href="http://design.hse.ru/lab">Лабораторией дизайна НИУ ВШЭ</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    </div>
+    <script type="text/javascript" src="~/wp-content/themes/mda/js/special.js"></script>
+</footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+
+
+    </section>
+
+  
+   <script src="~/NicepageAssets/js/jquery.js"></script>
+   <script src="~/NicepageAssets/js/nicepage.js"></script>
+
+    <!-- Js Для построения графиков -->
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/navigation.js"></script>
+    <script src="~/js/highcharts.js"></script>
+    <script src="~/js/exporting.js"></script>
+    <script src="~/js/scripts.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/jquery.ajaxchimp.min.js"></script>
+    <script src="~/js/jquery.form.js"></script>
+    <script src="~/js/jquery.magnific-popup.js"></script>
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery.paroller.min.js"></script>
+    <script src="~/js/jquery.slicknav.min.js"></script>
+    <script src="~/js/jquery.sticky.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/js/jquery.validate.min.js"></script>
+    <script src="~/js/loader.js"></script>
+
+
+
+
+
+ 
+
 </body>
 </html>
+
