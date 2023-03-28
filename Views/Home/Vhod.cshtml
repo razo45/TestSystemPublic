@@ -8,21 +8,21 @@
 
 
            
-          <form method="post" style="padding: 10px;" action="/Home/vhod">
-            <div class="u-form-email u-form-group">
-             <input value="1" style="display:none" type="number" data-val="true" data-val-required="The F field is required." id="F" name="F">
+          <form method="post" style="padding: 10px;" asp-controller="Home" asp-action="Login">
+             <div asp-validation-summary="ModelOnly"></div>
+              <div class="u-form-email u-form-group">
 
               <h5 for="email-71dc" class="u-custom-font u-label u-text-font">Логин</h5>
-              <input type="text" placeholder="Введите Ваш Login" class="u-border-2 u-border-custom-color-4 u-input u-input-rectangle u-white" required="" asp-action="Login" name="Login" value="">
+              <input type="text" placeholder="Введите Ваш Login" class="u-border-2 u-border-custom-color-4 u-input u-input-rectangle u-white" required="" asp-for="Login" name="Login">
             </div>
             <div class="u-form-group u-form-name" style="margin-top: 10px; margin-bottom: 10px;">
               <h5 for="name-71dc" class="u-custom-font u-label u-text-font">Пароль</h5>
-              <input type="password" placeholder="Введите ваш пароль" class="u-border-2 u-border-custom-color-4 u-input u-input-rectangle u-white" required="" id="Pass" name="Pass">
+              <input type="password" placeholder="Введите ваш пароль" class="u-border-2 u-border-custom-color-4 u-input u-input-rectangle u-white" required="" asp-for="Password" name="Password">
             </div>
+            <h3  style=" font-size: 1rem; margin-left: 10px;margin-top: 10px;margin-bottom: 10px; color: red;">@Model.Mess</h3>
             <div class="u-align-left u-form-group u-form-submit" style="display: flex;flex-direction: row;width: 100%;justify-content: space-between;">
                 <button class="u-btn u-btn-submit u-button-style" style="width: 100%;margin-bottom: 0px;margin-top: 0px;">Войти</button>
           </div>
-          <h3  style=" font-size: 1rem; margin-left: 10px;margin-top: 10px;margin-bottom: 0; color: red;"><ya-tr-span data-index="95-0" data-translated="false" data-source-lang="en" data-target-lang="ru" data-value="This is header 03" data-translation="Это заголовок 03" data-ch="0" data-type="trSpan" style=""></ya-tr-span></h3>
-          <input name="__RequestVerificationToken" type="hidden" value="CfDJ8HsE7HDVIIlCgggZaNRhiLA89c8QZz9CkUNEuk9snVTPIhdEiDmVzo2ny8sb-22KmlZtOwYy411Ik5njXIxSRyLYGhdk58eP9YI2GxLvU5zLbX4E_cd2JHAeKjR-KvqIckd3t2havcjV43JB04A_6Aw" /></form>
+          </form>
         </div>
       </div>

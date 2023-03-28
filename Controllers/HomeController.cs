@@ -48,8 +48,9 @@ namespace MpdaTest.Controllers
         }
 
 
-        public IActionResult PassingTheTest()
+        public async Task<IActionResult> PassingTheTest()
         {
+             
             loginMain = CoockiesChek();
             if (loginMain != null)
             {
@@ -63,7 +64,7 @@ namespace MpdaTest.Controllers
                 List<PassingThemeModel> passingTheme = new List<PassingThemeModel>();
 
 
-                foreach (var itemTheme in BD.ThemeTest.Where(x => x.ID == User.TestID))
+                foreach (var itemTheme in BD.ThemeTest.Where(x => x.IDTestSistem == User.TestID))
                 {
                     var Sort = from p in BD.TestSort.Where(x => x.IDtheme == itemTheme.ID).ToList()
                                orderby p.Number ascending
@@ -83,11 +84,16 @@ namespace MpdaTest.Controllers
 
                             case "OpenTest":
 
-                                var Open =BD.TestOpen.Where(x=>x.ID == itemSort.ID).FirstOrDefault();
+                                var Open =BD.TestOpen.Where(x=>x.ID == itemSort.IDques).FirstOrDefault();
                                 if (Open != null)
                                 {
                                     OpenPassing openPassing = new OpenPassing(Open.Question,string.Empty, Open.ID);
                                     passingThemeModel.openPassingsList.Add(openPassing);
+                                }
+                                else
+                                {
+                                    BD.TestSort.Remove(itemSort);
+                                    BD.SaveChangesAsync();
                                 }
 
                                 break;
@@ -107,17 +113,19 @@ namespace MpdaTest.Controllers
 
 
                 passingTest.passingThemes =passingTheme;
+                return View(passingTest);
             }
-            return View();
+            return RedirectToAction("vhod", "Home");
+            
         }
 
-        public IActionResult vhod()
+        public IActionResult vhod(LoginViewModel model)
         {
-            return View();
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public IActionResult Login(LoginViewModel model)
         {
 
             if (ModelState.IsValid)
@@ -134,22 +142,22 @@ namespace MpdaTest.Controllers
                         Response.Cookies.Append("Login", login, cookieOptions);
                         loginMain = login;
 
-                        return RedirectToAction("AllCourse");//Переход на нужную страницу
+                        return RedirectToAction("PassingTheTest", "Home");//Переход на нужную страницу
 
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                        model.Mess = "Неправильный логин и (или) пароль";
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    model.Mess="Неправильный логин и (или) пароль";
                 }
 
 
             }
-            return View(model);
+            return RedirectToAction("vhod", "Home", model);//Переход на нужную страницу
 
         }
 

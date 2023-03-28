@@ -13,6 +13,8 @@ namespace MpdaTest.ViewModels
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
+        public string Mess { get; set; }
+
 
     }
 }
