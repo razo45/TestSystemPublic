@@ -1,1 +1,159 @@
-﻿
+﻿@model MpdaTest.Models.PassingTestModel;    
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="ru"><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Прохождение теста</title>
+      
+
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+<link rel="stylesheet" href="TetsPage.css" media="screen">
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 5.1.5, nicepage.com">
+    <meta name="referrer" content="origin">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    
+
+  <meta charset="utf-8">
+  <title>Гистограмма</title>
+  <script src="/js/loader.js"></script>
+
+
+    
+    
+
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="TetsPage">
+    <meta property="og:type" content="website">
+  </head>
+  <body class="u-body u-xl-mode" data-lang="ru">
+
+    <section class="u-align-center u-clearfix u-section-1" id="sec-e832">
+         
+
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+
+            <form method="post" asp-controller="Home" asp-action="PassingSet">
+              <input type="hidden" asp-for="ID" value="@Model.ID">
+
+
+
+                    @for (int i = 0; i < Model.passingThemes.Count(); i++)
+                    {
+                    <h2 style="text-align:center">@Model.passingThemes[i].Name</h2>
+                    <input type="hidden" asp-for="passingThemes[i].ID"    value="@Model.passingThemes[i].ID"> //Передача id темы
+
+                        for (int iS = 0; iS < Model.passingThemes[i].testSortsList.Count(); iS++)
+                        {
+                            int item = 0;
+                            switch (Model.passingThemes[i].testSortsList[iS].Type)
+                            {
+                                case "CloseTest":
+                                    var Close = Model.passingThemes[i].ClosePassingsList.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                    if (Close!=null)
+                                    {
+                                        item = Model.passingThemes[i].ClosePassingsList.IndexOf(Close);
+                                        <p class="u-form-group u-form-text u-text u-text-2" style="color: #8b680c;">@Model.passingThemes[i].ClosePassingsList[item].Name<br> </p>
+                                        <input type="hidden" asp-for="passingThemes[i].ClosePassingsList[item].Id"    value="@Model.passingThemes[i].ClosePassingsList[item].Id"> //Передача id
+                                    
+                                    
+                                        <div class="u-form-radio-button-wrapper" style="margin-bottom: 20px;text-align: left;">
+
+                                            @for (int ItemAnswer = 0; ItemAnswer < Model.passingThemes[i].ClosePassingsList[item].answerTs.Count(); ItemAnswer++)
+                                            {
+                                                <div class="u-input-row">
+                                                        <input type="radio" asp-for="@Model.passingThemes[i].ClosePassingsList[item].AnswerTSelect" value="@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].ID" checked="checked" >
+                                                        @if (Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].TextUser !=null)
+                                                        {
+                                                        <label class="u-label" for="radiobutton">@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].TextUser</label>
+                                                        }
+                                                        else
+                                                        {
+                                                        <label class="u-label" for="radiobutton">@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].Text</label>
+                                                        }
+                                                     
+                                                </div>
+                                            }
+
+                                        
+                                        </div>
+
+
+
+
+                                    
+
+                                    }
+                                
+                                
+                                    break;
+
+                                case "OpenTest":
+
+                                    var Open = Model.passingThemes[i].openPassingsList.Where(x => x.ID == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                    if (Open!=null)
+                                    {
+                                        item = Model.passingThemes[i].openPassingsList.IndexOf(Open);
+                                        <p class="u-form-group u-form-text u-text u-text-1" style="color: #8b680c;">@Model.passingThemes[i].openPassingsList[item].Name</p>
+
+                                        <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"    value="@Model.passingThemes[i].openPassingsList[item].ID"> //Передача id
+                                        <textarea placeholder="Введите ответ на вопрос" rows="4" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="passingThemes[i].openPassingsList[item].Text" ></textarea>
+
+                                    }
+                                
+
+                                        break;
+
+                                    case "TableTest":
+
+                                        break;
+
+                            }
+
+
+
+
+                        }
+                    }
+                        <p class="u-form-group u-form-text u-text u-text-2" style="color: #8b680c;"> Учебная нагрузка<br></p>
+                            <div class="u-form-group u-form-radiobutton u-label-none u-form-group-4">
+                                <label class="u-label">Радио-кнопки</label>
+                                <div class="u-form-radio-button-wrapper" style="margin-bottom: 20px;">
+
+                                        <div class="u-input-row">
+                                                <input type="radio" value="3410" checked="checked" data-val="true" data-val-required="The IdAnswer field is required." id="ThemeModels_1__CloseTestModels_0__IdAnswer" name="ThemeModels[1].CloseTestModels[0].IdAnswer">
+                                             <label class="u-label" for="radiobutton">слишком легко</label>
+                                        </div>
+                                        <div class="u-input-row">
+                                                <input type="radio" value="3411" id="ThemeModels_1__CloseTestModels_0__IdAnswer" name="ThemeModels[1].CloseTestModels[0].IdAnswer">
+                                             <label class="u-label" for="radiobutton">легко</label>
+                                        </div>
+                                        <div class="u-input-row">
+                                                <input type="radio" value="3412" id="ThemeModels_1__CloseTestModels_0__IdAnswer" name="ThemeModels[1].CloseTestModels[0].IdAnswer">
+                                             <label class="u-label" for="radiobutton">оптимальная нагрузка</label>
+                                        </div>
+                                        <div class="u-input-row">
+                                                <input type="radio" value="3413" id="ThemeModels_1__CloseTestModels_0__IdAnswer" name="ThemeModels[1].CloseTestModels[0].IdAnswer">
+                                             <label class="u-label" for="radiobutton">сложно</label>
+                                        </div>
+                                        <div class="u-input-row">
+                                                <input type="radio" value="3414" id="ThemeModels_1__CloseTestModels_0__IdAnswer" name="ThemeModels[1].CloseTestModels[0].IdAnswer">
+                                             <label class="u-label" for="radiobutton">слишком сложно</label>
+                                        </div>
+                                </div>
+                            </div>
+            <div class="col-lg-12">
+            <button class="u-btn u-btn-submit u-button-style">Отправить ответы</button>
+            </div>
+    </form>
+    </div>
+    </section>
+  
+   
+    
+
+  
+</body></html>

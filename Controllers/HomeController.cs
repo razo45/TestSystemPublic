@@ -47,9 +47,17 @@ namespace MpdaTest.Controllers
 
         }
 
-
-        public IActionResult PassingTheTest()
+        [HttpPost]
+        public IActionResult PassingSet(PassingTestModel model)
         {
+
+            return RedirectToAction("PassingSet", "Home");
+        }
+
+
+        public async Task<IActionResult> PassingTheTest()
+        {
+             
             loginMain = CoockiesChek();
             if (loginMain != null)
             {
@@ -57,21 +65,29 @@ namespace MpdaTest.Controllers
 
                 var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == User.TestID).FirstOrDefault();
                 var Test = BD.TestSistem.Where(x => x.ID == User.TestID).FirstOrDefault();
-                PassingTestModel passingTest = new PassingTestModel(TestOpis.Opis, Test.Name, Test.ID);
+                PassingTestModel passingTest = new PassingTestModel();
+                passingTest.Opisanie = TestOpis.Opis;
+                passingTest.passingThemes = new List<PassingThemeModel>();
+                passingTest.Name = Test.Name;
+                passingTest.ID = Test.ID;
+
+                
 
 
-                List<PassingThemeModel> passingTheme = new List<PassingThemeModel>();
-
-
-                foreach (var itemTheme in BD.ThemeTest.Where(x => x.ID == User.TestID))
+                foreach (var itemTheme in BD.ThemeTest.Where(x => x.IDTestSistem == User.TestID))
                 {
                     var Sort = from p in BD.TestSort.Where(x => x.IDtheme == itemTheme.ID).ToList()
                                orderby p.Number ascending
                                select p;
 
-                    PassingThemeModel passingThemeModel = new PassingThemeModel(itemTheme.Name, itemTheme.ID, Sort.ToList());
+                    PassingThemeModel passingThemeModel = new PassingThemeModel();
+                    passingThemeModel.Name = itemTheme.Name;
+                    passingThemeModel.ID =  itemTheme.ID;
+                    passingThemeModel.testSortsList = Sort.ToList();           
+                    passingThemeModel.openPassingsList = new List<OpenPassing>();
+                    passingThemeModel.ClosePassingsList = new List<ClosePassing>();
 
-                    
+
 
                     foreach (var itemSort in Sort)
                     {
@@ -79,45 +95,75 @@ namespace MpdaTest.Controllers
                         {
                             case "CloseTest":
 
+                                var close = BD.TestAnswer.Where(x => x.ID == itemSort.IDques).FirstOrDefault();
+
+                                if (close != null)
+                                {
+                                    ClosePassing closePassing = new ClosePassing();
+                                    closePassing.Id = close.ID;
+                                    closePassing.Name = close.Question;
+                                    closePassing.answerTs = BD.AnswerT.Where(x => x.IDTestAnswer == close.ID).ToList();
+
+
+                                    passingThemeModel.ClosePassingsList.Add(closePassing);
+                                }
+                                else
+                                {
+                                    BD.TestSort.Remove(itemSort);
+
+                                }
                                 break;
 
                             case "OpenTest":
 
-                                var Open =BD.TestOpen.Where(x=>x.ID == itemSort.ID).FirstOrDefault();
+                                var Open =BD.TestOpen.Where(x=>x.ID == itemSort.IDques).FirstOrDefault();
                                 if (Open != null)
                                 {
-                                    OpenPassing openPassing = new OpenPassing(Open.Question,string.Empty, Open.ID);
+                                    OpenPassing openPassing = new OpenPassing();
+                                    openPassing.Name = Open.Question;
+                                    openPassing.Text = string.Empty;
+                                    openPassing.ID = Open.ID;
+
                                     passingThemeModel.openPassingsList.Add(openPassing);
+                                }
+                                else
+                                {
+                                    BD.TestSort.Remove(itemSort);
+
                                 }
 
                                 break;
 
                             case "TableTest":
 
+                                
+
                                 break;
 
                         }
                     }
-
-                    passingTheme.Add(passingThemeModel);
+                   BD.SaveChangesAsync();
+                    passingTest.passingThemes.Add(passingThemeModel);
 
 
 
                 }
 
 
-                passingTest.passingThemes =passingTheme;
+                ;
+                return View(passingTest);
             }
-            return View();
+            return RedirectToAction("vhod", "Home");
+            
         }
 
-        public IActionResult vhod()
+        public IActionResult vhod(LoginViewModel model)
         {
-            return View();
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public IActionResult Login(LoginViewModel model)
         {
 
             if (ModelState.IsValid)
@@ -134,22 +180,22 @@ namespace MpdaTest.Controllers
                         Response.Cookies.Append("Login", login, cookieOptions);
                         loginMain = login;
 
-                        return RedirectToAction("AllCourse");//Переход на нужную страницу
+                        return RedirectToAction("PassingTheTest", "Home");//Переход на нужную страницу
 
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                        model.Mess = "Неправильный логин и (или) пароль";
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    model.Mess="Неправильный логин и (или) пароль";
                 }
 
 
             }
-            return View(model);
+            return RedirectToAction("vhod", "Home", model);//Переход на нужную страницу
 
         }
 

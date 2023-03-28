@@ -11,14 +11,9 @@ namespace MpdaTest.Models
 
         public List<TestSort> testSortsList { get; set; }
 
-        public List<OpenPassing> openPassingsList { get; set; }
+        public List<OpenPassing> openPassingsList{ get; set; }
+        public List<ClosePassing> ClosePassingsList { get; set; }
 
-        public PassingThemeModel(string Name, int ID, List<TestSort> testSorts)
-        {
-            this.Name = Name;
-            this.ID = ID;
-            this.testSortsList = testSorts;
-            openPassingsList = new List<OpenPassing>(); 
-        }
+
     }
 }

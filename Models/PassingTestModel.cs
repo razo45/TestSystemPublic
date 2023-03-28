@@ -21,11 +21,6 @@ namespace MpdaTest.Models
 
         public List<PassingThemeModel> passingThemes { get; set; }  
 
-        public PassingTestModel(string opisanie, string Name, int ID)
-        {
-            this.Opisanie = opisanie;
-            this.Name = Name;
-            this.ID = ID;
-        }
+   
     }
 }
