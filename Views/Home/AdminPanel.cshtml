@@ -141,14 +141,13 @@
                             </div>
                         <input name="__RequestVerificationToken" type="hidden" value="CfDJ8JNgBU-ZHPVOpl_9HDDRGofME1wjYwbtPpojUi5EX5d0v5X0vL6fWifMNaUqdmHjGZTfxPhMXIVxGgJ5vP7vtshRUKZn4rdRrmH_59ZbTpHx6_eARc49Dw3hsAD7l4IuBcooG1gZJuGh6UnEb7D7L6Q" /></form>
 
-                        
 
-                        <form method="post" style="width: 100%;text-align: left;margin-bottom: 30px;" action="/Home/CopyTest">
+                        <form method="post" style="width: 100%;text-align: left;margin-bottom: 30px;" asp-controller="Home" asp-action="CopyTest">
                              <h2 style="text-align: center;">Создать копию теста</h2>
                             <div style="Width:100%;padding-left: 0px;padding-right: 0px;margin-bottom: 10px;" class="col-lg-6 ">
                                 <span>Выберите курс</span><br/>
                                         <div class="select" style="width: auto;">
-                                            <select data-val="true" data-val-required="The idTest field is required." id="idTest" name="idTest">
+                                            <select asp-for="CopyingTestModel.IdTest">
                                                 @foreach (var item in Model.listTests)
                                                 {
                                                     <option value="@item.ID">@item.Name</option>
@@ -156,12 +155,18 @@
                                             </select>
                                         </div>
                                     </div>
-                            <span>Введите название нового теста</span><br/>
-                            <input type="text" style="margin-bottom: 10px" placeholder="Название нового теста" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="NameTest" name="NameTest" value="" />
-                             <span style="margin-top 20px">Открытие теста</span><br  />
-                            <input type="date" style="margin-bottom: 10px" value="@DateTime.Now" placeholder="Дата открытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" data-val="true" data-val-required="The dateOpen field is required." id="dateOpen" name="dateOpen" />
+                            
+                                    
+                                    <span>Введите название нового теста</span><br/>
+                            <input asp-for="CopyingTestModel.Name" type="text" style="margin-bottom: 10px" placeholder="Название нового теста" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required=""  />
+                             
+                            
+                            <span style="margin-top 20px">Открытие теста</span><br  />
+                            <input asp-for="CopyingTestModel.DateOpen" type="date" style="margin-bottom: 10px" value="@DateTime.Now" placeholder="Дата открытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" />
+                            
+                            
                             <span style="margin-top 20px">Закрытие теста</span><br  />
-                            <input type="date" value="@DateTime.Now" placeholder="Дата закрытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" data-val="true" data-val-required="The dateClose field is required." id="dateClose" name="dateClose" />
+                            <input asp-for="CopyingTestModel.DateClose" type="date" value="@DateTime.Now" placeholder="Дата закрытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required=""  />
 
                              <div class="col-lg-12" style="padding-left: 0px;">
                             <button class="u-btn u-btn-submit u-button-style">Копировать тест</button>

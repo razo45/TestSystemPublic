@@ -6,6 +6,7 @@ using MpdaTest.Models.PassingModels;
 using MpdaTest.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,9 +25,12 @@ namespace MpdaTest.Controllers
         {
 
         }
+        #region Методы администратора
 
+        //Отображение панели администратора ✔
         public IActionResult AdminPanel()
         {
+            BD = new Model1();
             AdminViewModel model = new AdminViewModel();
             model.listTests = new List<ListTestAdmin>();
 
@@ -45,52 +49,156 @@ namespace MpdaTest.Controllers
 
             return View(model);
         }
+
+        //Добавление нового теста ✔
         public IActionResult AddNewTest(AdminViewModel model)
         {
-            TestSistem testSistem = new TestSistem() { Name = model.NewTestModel.Name, DateOpen = model.NewTestModel.DateOpen.ToShortDateString(), DateClose= model.NewTestModel.DateClose.ToShortDateString() };
+            TestSistem testSistem = new TestSistem() { Name = model.NewTestModel.Name, DateOpen = model.NewTestModel.DateOpen.ToShortDateString(), DateClose = model.NewTestModel.DateClose.ToShortDateString() };
             BD.TestSistem.Add(testSistem);
             BD.SaveChanges();
 
             return RedirectToAction("AdminPanel", "Home");
         }
 
-        public IActionResult CopyTest(AdminViewModel model)
+        //Копирование теста ✔
+        public async Task<IActionResult> CopyTest(AdminViewModel model)
         {
-            int NewId = 0;
+
 
             //Копирование теста
-            var Test = BD.TestSistem.Where(x => x.ID == NewId).FirstOrDefault();
-            TestSistem testSistem = new TestSistem() {DateClose= Test.DateClose, DateOpen= Test.DateOpen, Name = Test.Name };
-            BD.TestSistem.Add(testSistem);
-            BD.SaveChanges();
+            var Test =  BD.TestSistem.Where(x => x.ID == model.CopyingTestModel.IdTest).FirstOrDefault();
 
-            //Копирование описания
-            var opis = BD.OpisTheme.Where(x => x.IdTheme == Test.ID).FirstOrDefault();
-            if (opis!=null)
-            {
-                OpisTheme opisTest = new OpisTheme() { IdTheme= testSistem.ID, ImageBit=opis.ImageBit, link=opis.link, Opis = opis.Opis };
-                BD.OpisTheme.Add(opisTest);
-            }
 
-            //Копирование темы
-            foreach (var item in BD.ThemeTest.Where(x=>x.IDTestSistem== Test.ID).ToList())
+            if (Test != null)
             {
-                ThemeTest themeTest = new ThemeTest() { IDTestSistem= testSistem.ID, Name=item.Name };
-                BD.ThemeTest.Add(themeTest);
+                var testSistem = new TestSistem
+                {
+                    DateClose = model.CopyingTestModel.DateClose.ToShortDateString(),
+                    DateOpen = model.CopyingTestModel.DateOpen.ToShortDateString(),
+                    Name = model.CopyingTestModel.Name
+                };
+
+                BD.TestSistem.Add(testSistem);
                 BD.SaveChanges();
 
-                foreach (var itemOpen in BD.TestOpen.Where(x=>x.IDTheme==item.ID).ToList())
+                //Копирование описания
+                var opis = await BD.OpisTheme.Where(x => x.IdTheme == Test.ID).FirstOrDefaultAsync();
+                if (opis != null)
                 {
-                    TestOpen testOpen = new TestOpen() { IDTheme= themeTest .ID, necessarily=itemOpen.necessarily, Question=itemOpen.Question}
+                    var opisTest = new OpisTheme
+                    {
+                        IdTheme = testSistem.ID,
+                        ImageBit = opis.ImageBit,
+                        link = opis.link,
+                        Opis = opis.Opis
+                    };
+                    BD.OpisTheme.Add(opisTest);
+                }
+
+                //Копирование темы
+                foreach (var item in await BD.ThemeTest.Where(x => x.IDTestSistem == Test.ID).ToListAsync())
+                {
+                    ThemeTest themeTest = new ThemeTest() { IDTestSistem = testSistem.ID, Name = item.Name };
+                    BD.ThemeTest.Add(themeTest);
+                    BD.SaveChanges();
+
+                    var sort = await BD.TestSort.Where(x => x.IDtheme == item.ID).ToListAsync();
+                    foreach (var itemSort in sort)
+                    {
+                        switch (itemSort.Type)
+                        {
+                            case "CloseTest":
+
+                                var close = await BD.TestAnswer.Where(x => x.ID == itemSort.IDques).FirstOrDefaultAsync();
+
+                                if (close != null)
+                                {
+                                    TestAnswer testAnswer = new TestAnswer() { IDTheme = themeTest.ID, necessarily = close.necessarily, Question = close.Question };
+                                    BD.TestAnswer.Add(testAnswer);
+                                   await BD.SaveChangesAsync();
+
+                                    TestSort testSort = new TestSort() { IDques = testAnswer.ID, IDtheme = themeTest.ID, Number = itemSort.Number, Type = itemSort.Type };
+                                    BD.TestSort.Add(testSort);
+
+                                    foreach (var itemAnswer in BD.AnswerT.Where(x => x.IDTestAnswer == close.ID).ToList())
+                                    {
+                                        AnswerT answerT = new AnswerT() { Correct = itemAnswer.Correct, NumberOfSelected = 0, Text = itemAnswer.Text, TextUser = itemAnswer.TextUser, IDTestAnswer = testAnswer.ID };
+                                        BD.AnswerT.Add(answerT);
+
+                                    }
+                                   await BD.SaveChangesAsync();
+                                }
+
+                                break;
+                            case "OpenTest":
+
+                                var Open = await BD.TestOpen.Where(x => x.ID == itemSort.IDques).FirstOrDefaultAsync();
+
+                                if (Open != null)
+                                {
+                                    TestOpen testOpen = new TestOpen() { IDTheme = themeTest.ID, necessarily = Open.necessarily, Question = Open.Question };
+                                    BD.TestOpen.Add(testOpen);
+                                    await BD.SaveChangesAsync();
+
+
+                                    TestSort testSort1 = new TestSort() { IDques = testOpen.ID, IDtheme = themeTest.ID, Number = itemSort.Number, Type = itemSort.Type };
+                                    BD.TestSort.Add(testSort1);
+                                    await BD.SaveChangesAsync();
+                                }
+
+                                break;
+
+                            case "TableTest":
+                                var Table = await BD.TableTest.Where(x => x.ID == itemSort.IDques).FirstOrDefaultAsync();
+
+                                if (Table != null)
+                                {
+                                    TableTest tableTest = new TableTest() { Desp = Table.Desp, Name = Table.Name, necessarily = Table.necessarily, IDTheme = themeTest.ID };
+                                    BD.TableTest.Add(tableTest);
+                                    await BD.SaveChangesAsync();
+
+                                    TestSort testSort2 = new TestSort() { IDques = tableTest.ID, IDtheme = themeTest.ID, Number = itemSort.Number, Type = itemSort.Type };
+                                    BD.TestSort.Add(testSort2);
+
+                                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == Table.ID).ToListAsync())
+                                    {
+                                        Theme theme = new Theme() { IDTable = tableTest.ID, Text = itemTheme.Text };
+                                        BD.Theme.Add(theme);
+                                    }
+                                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == Table.ID).ToListAsync())
+                                    {
+                                        question Question = new question() { IDTable = tableTest.ID, Text = itemQuestion.Text };
+                                        BD.question.Add(Question);
+                                    }
+                                    await BD.SaveChangesAsync();
+                                }
+
+
+
+                                break;
+
+                        }
+                    }
+
+
+
+
 
                 }
             }
 
 
-
             return RedirectToAction("AdminPanel", "Home");
         }
 
+        public IActionResult CreateUser()
+        {
+            return RedirectToAction("AdminPanel", "Home");
+        }
+
+
+        #endregion
+        //Проверка логина в Coockie ✔
         public string CoockiesChek()
         {
             if (Request.Cookies.ContainsKey("Login"))
@@ -111,7 +219,7 @@ namespace MpdaTest.Controllers
 
         }
 
-
+        //Отправка ответов на тест ✔
         [HttpPost]
         public IActionResult PassingSet(PassingTestModel model)
         {
@@ -182,8 +290,7 @@ namespace MpdaTest.Controllers
             return RedirectToAction("PassingTheTest", "Home");
         }
 
-
-        //Отображение прохождения тестов (Готово)
+        //Отображение прохождения тестов ✔
         public async Task<IActionResult> PassingTheTest()
         {
 
@@ -329,9 +436,7 @@ namespace MpdaTest.Controllers
 
         }
 
-
-
-
+        //Вход в аккаунт ✔
         public IActionResult vhod(LoginViewModel model)
         {
             if (CoockiesChek() == null)
@@ -353,6 +458,7 @@ namespace MpdaTest.Controllers
 
         }
 
+        //Отправка данных для входа в аккаунт ✔
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
@@ -377,6 +483,7 @@ namespace MpdaTest.Controllers
                         }
                         else
                         {
+                            return RedirectToAction("AdminPanel", "Home");//Переход на нужную страницу
 
                         }
 
@@ -397,6 +504,7 @@ namespace MpdaTest.Controllers
 
         }
 
+        //ВЫход из аккаунта ✔
         public IActionResult Exit()
         {
             GC.Collect();
