@@ -47,6 +47,7 @@ namespace MpdaTest.Controllers
 
         }
 
+
         [HttpPost]
         public IActionResult PassingSet(PassingTestModel model)
         {
@@ -55,8 +56,10 @@ namespace MpdaTest.Controllers
         }
 
 
+
         public async Task<IActionResult> PassingTheTest()
         {
+
              
             loginMain = CoockiesChek();
             if (loginMain != null)
@@ -72,6 +75,11 @@ namespace MpdaTest.Controllers
                 passingTest.ID = Test.ID;
 
                 
+
+
+
+
+                List<PassingThemeModel> passingTheme = new List<PassingThemeModel>();
 
 
                 foreach (var itemTheme in BD.ThemeTest.Where(x => x.IDTestSistem == User.TestID))
@@ -130,6 +138,10 @@ namespace MpdaTest.Controllers
                                 {
                                     BD.TestSort.Remove(itemSort);
 
+
+
+                                  
+
                                 }
 
                                 break;
@@ -149,8 +161,6 @@ namespace MpdaTest.Controllers
 
                 }
 
-
-                ;
                 return View(passingTest);
             }
             return RedirectToAction("vhod", "Home");
