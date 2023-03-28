@@ -17,6 +17,9 @@ namespace MpdaTest.Models
         /// </summary>
         public int ID { get; set;}
 
+        public byte[] bytes { get; set; }
+
+        public string url { get; set; }
 
 
         public List<PassingThemeModel> passingThemes { get; set; }  

@@ -1,0 +1,191 @@
+﻿  <!DOCTYPE html>
+  @model MpdaTest.ViewModels.AdminViewModel;
+<html style="font-size: 16px;" lang="ru"><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Администрирование</title>
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+    <link rel="stylesheet" href="TetsPage.css" media="screen">
+    <link rel="stylesheet" href="/css/Select.css">
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 5.1.5, nicepage.com">
+    <meta name="referrer" content="origin">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    
+    <head>
+  <meta charset="utf-8">
+  <title>Гистограмма</title>
+  <script src="/js/loader.js"></script>
+
+ </head>
+    
+    
+
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="TetsPage">
+    <meta property="og:type" content="website">
+  </head>
+  <body class="u-body u-xl-mode" data-lang="ru">
+     
+    <section class="u-align-center u-clearfix u-section-1" id="sec-e832">
+         
+
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+
+        <div class="u-expanded-width u-table u-table-responsive u-table-1">
+          <table class="u-table-entity u-table-entity-1">
+            <colgroup>
+              <col width="16,6%">
+              <col width="16,6%">
+              <col width="16,6%">
+              <col width="16,6%">
+              <col width="16,6%">
+              <col width="16,6%">
+              <col width="16,6%">
+            </colgroup>
+            <thead class="u-black u-table-header u-table-header-1">
+              <tr style="height: 21px;">
+                <th class="u-border-1 u-border-black u-table-cell"> Наименование
+ТС&nbsp;</th>
+                <th class="u-border-1 u-border-black u-table-cell"> Количество
+голосовавших (логинов)&nbsp;</th>
+                <th class="u-border-1 u-border-black u-table-cell"> Количество
+проголосовавших (актуальное на момент)</th>
+                <th class="u-border-1 u-border-black u-table-cell"> Дата
+проведения (открытие и закрытие теста/опроса)</th>
+                <th class="u-border-1 u-border-black u-table-cell">Выгрузка
+данных</th>
+                <th class="u-border-1 u-border-black u-table-cell">Изменить тест</th>
+                <th class="u-border-1 u-border-black u-table-cell">Удалить тест</th>
+                
+              </tr>
+            </thead>
+            <tbody class="u-table-body">
+                        @foreach (var item in Model.listTests)
+                        {
+                            <tr style="height: 75px;">
+                                <td class="u-border-1 u-border-grey-30 u-table-cell">
+                                    <a href="/Home/TsOpen?IDts=60" class="genric-btn link">@item.Name</a>
+
+                                </td>
+                                <td class="u-border-1 u-border-grey-30 u-table-cell">@item.AllCount</td>
+                                <td class="u-border-1 u-border-grey-30 u-table-cell">@item.Count</td>
+                                <td class="u-border-1 u-border-grey-30 u-table-cell">@item.date</td>
+                                <td class="u-border-1 u-border-grey-30 u-table-cell">
+                                 <a href="/Home/CreateOtchet?IdTest=60" class="genric-btn link">Выгрузить данные</a>
+                                </td>
+
+                                <td class="u-border-1 u-border-grey-30 u-table-cell">
+                                 <a href="/Home/CreateTest?idTest=60" class="genric-btn link">Изменить тест</a>
+                                </td>
+
+                                <td class="u-border-1 u-border-grey-30 u-table-cell">
+                                 <a href="/Home/DeleteTest?IDTestSistem=60" class="genric-btn link">Удалить тест</a>
+                                </td>
+
+                          
+
+                           
+                            </tr> 
+                        }
+                        
+                          
+
+              
+             
+            </tbody>
+          </table>
+        </div>
+                        <form method="post" style="width: 100%;text-align: left;margin-bottom: 30px;" action="/Home/AdminPanel">
+                            <h2 style="text-align: center;">Добавить пользователей для курса</h2>
+                            <div style="Width:100%;padding-left: 0px;padding-right: 0px;margin-bottom: 10px;" class="col-lg-6 ">
+                                <span>Выберите курс</span><br/>
+                                        <div class="select" style="width: auto;">
+                                            
+                                            <select data-val="true" data-val-required="The idTest field is required." id="idTest" name="idTest">
+                                                @foreach (var item in Model.listTests)
+                                                {
+                                                    <option value="@item.ID">@item.Name</option>
+                                                }
+                            
+                                                    
+
+                                            </select>
+                                        </div>
+                                    </div>
+                            <span>Введите кол-во пользователей</span><br/>
+                            <input type="number" style="margin-bottom: 10px" placeholder="Кол-во пользователей" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" data-val="true" data-val-required="The CountUser field is required." id="CountUser" name="CountUser" value="0" />
+                            <span>Введите имя пользователей </span><br/>
+                            <input type="text" placeholder="Название пользователей" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="usename" name="usename" value="" />
+
+                             <div class="col-lg-12" style="padding-left: 0px;">
+                            <button class="u-btn u-btn-submit u-button-style">Добавить пользователей</button>
+                            </div>
+                        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8JNgBU-ZHPVOpl_9HDDRGofME1wjYwbtPpojUi5EX5d0v5X0vL6fWifMNaUqdmHjGZTfxPhMXIVxGgJ5vP7vtshRUKZn4rdRrmH_59ZbTpHx6_eARc49Dw3hsAD7l4IuBcooG1gZJuGh6UnEb7D7L6Q" /></form>
+
+
+                        <form method="post" style="width: 100%;text-align: left;margin-bottom: 30px;" asp-controller="Home" asp-action="AddNewTest">
+                            <h2 style="text-align: center;">Добавить тест</h2>  
+                            <span>Добавить тест</span><br  />
+                            <input asp-for="NewTestModel.Name" type="text" placeholder="Введите название теста" style="margin-bottom: 10px" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required=""  />
+                             <span style="margin-top: 20px">Открытие теста</span><br  />
+                            <input asp-for="NewTestModel.DateOpen" type="date" value="@DateTime.Now" style="margin-bottom: 10px" placeholder="Дата открытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required=""  />
+                            <span style="margin-top: 20px">Закрытие теста</span><br  />
+                            <input asp-for="NewTestModel.DateClose" type="date" value="@DateTime.Now" placeholder="Дата закрытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required=""  />
+
+                             <div class="col-lg-12" style="padding-left: 0px;">
+                            <button class="u-btn u-btn-submit u-button-style">Создать тест</button>
+                            </div>
+                        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8JNgBU-ZHPVOpl_9HDDRGofME1wjYwbtPpojUi5EX5d0v5X0vL6fWifMNaUqdmHjGZTfxPhMXIVxGgJ5vP7vtshRUKZn4rdRrmH_59ZbTpHx6_eARc49Dw3hsAD7l4IuBcooG1gZJuGh6UnEb7D7L6Q" /></form>
+
+                        
+
+                        <form method="post" style="width: 100%;text-align: left;margin-bottom: 30px;" action="/Home/CopyTest">
+                             <h2 style="text-align: center;">Создать копию теста</h2>
+                            <div style="Width:100%;padding-left: 0px;padding-right: 0px;margin-bottom: 10px;" class="col-lg-6 ">
+                                <span>Выберите курс</span><br/>
+                                        <div class="select" style="width: auto;">
+                                            <select data-val="true" data-val-required="The idTest field is required." id="idTest" name="idTest">
+                                                @foreach (var item in Model.listTests)
+                                                {
+                                                    <option value="@item.ID">@item.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                            <span>Введите название нового теста</span><br/>
+                            <input type="text" style="margin-bottom: 10px" placeholder="Название нового теста" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="NameTest" name="NameTest" value="" />
+                             <span style="margin-top 20px">Открытие теста</span><br  />
+                            <input type="date" style="margin-bottom: 10px" value="@DateTime.Now" placeholder="Дата открытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" data-val="true" data-val-required="The dateOpen field is required." id="dateOpen" name="dateOpen" />
+                            <span style="margin-top 20px">Закрытие теста</span><br  />
+                            <input type="date" value="@DateTime.Now" placeholder="Дата закрытия" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" data-val="true" data-val-required="The dateClose field is required." id="dateClose" name="dateClose" />
+
+                             <div class="col-lg-12" style="padding-left: 0px;">
+                            <button class="u-btn u-btn-submit u-button-style">Копировать тест</button>
+                            </div>
+                    </form>
+
+                       
+                    
+                    
+          
+
+
+            
+               
+
+              
+
+        
+      </div>
+    </section>
+  
+   
+    
+    
+
+  
+</body></html>

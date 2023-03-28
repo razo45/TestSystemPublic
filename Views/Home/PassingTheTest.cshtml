@@ -37,9 +37,15 @@
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
           <div class="">
            <div class="u-container-layout u-container-layout-12">
-                         <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="" alt="" data-image-width="800" data-image-height="786">
-                          <h2 style="text-align:center">@Model.Opisanie</h2>    
-
+               @if (Model.url!=null)
+               {
+                 <a href="@Model.url"><img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))"  ></a>     
+               }
+               else
+               {
+                 <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))" >
+               }
+               <h2 style="text-align:center">@Model.Opisanie</h2>  
            </div>
           </div>
 

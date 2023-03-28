@@ -25,7 +25,71 @@ namespace MpdaTest.Controllers
 
         }
 
+        public IActionResult AdminPanel()
+        {
+            AdminViewModel model = new AdminViewModel();
+            model.listTests = new List<ListTestAdmin>();
 
+            foreach (var item in BD.TestSistem.ToList())
+            {
+                ListTestAdmin testAdmin = new ListTestAdmin() { ID = item.ID, Name = item.Name };
+                testAdmin.AllCount = BD.UserSelectTest.Where(x => x.TestID == item.ID).Count();
+                testAdmin.Count = BD.UserSelectTest.Where(x => x.TestID == item.ID && x.BoolPassed == true).Count();
+                testAdmin.date = "Дата(" + item.DateOpen + "/" + item.DateClose;
+                model.listTests.Add(testAdmin);
+            }
+
+
+
+
+
+            return View(model);
+        }
+        public IActionResult AddNewTest(AdminViewModel model)
+        {
+            TestSistem testSistem = new TestSistem() { Name = model.NewTestModel.Name, DateOpen = model.NewTestModel.DateOpen.ToShortDateString(), DateClose= model.NewTestModel.DateClose.ToShortDateString() };
+            BD.TestSistem.Add(testSistem);
+            BD.SaveChanges();
+
+            return RedirectToAction("AdminPanel", "Home");
+        }
+
+        public IActionResult CopyTest(AdminViewModel model)
+        {
+            int NewId = 0;
+
+            //Копирование теста
+            var Test = BD.TestSistem.Where(x => x.ID == NewId).FirstOrDefault();
+            TestSistem testSistem = new TestSistem() {DateClose= Test.DateClose, DateOpen= Test.DateOpen, Name = Test.Name };
+            BD.TestSistem.Add(testSistem);
+            BD.SaveChanges();
+
+            //Копирование описания
+            var opis = BD.OpisTheme.Where(x => x.IdTheme == Test.ID).FirstOrDefault();
+            if (opis!=null)
+            {
+                OpisTheme opisTest = new OpisTheme() { IdTheme= testSistem.ID, ImageBit=opis.ImageBit, link=opis.link, Opis = opis.Opis };
+                BD.OpisTheme.Add(opisTest);
+            }
+
+            //Копирование темы
+            foreach (var item in BD.ThemeTest.Where(x=>x.IDTestSistem== Test.ID).ToList())
+            {
+                ThemeTest themeTest = new ThemeTest() { IDTestSistem= testSistem.ID, Name=item.Name };
+                BD.ThemeTest.Add(themeTest);
+                BD.SaveChanges();
+
+                foreach (var itemOpen in BD.TestOpen.Where(x=>x.IDTheme==item.ID).ToList())
+                {
+                    TestOpen testOpen = new TestOpen() { IDTheme= themeTest .ID, necessarily=itemOpen.necessarily, Question=itemOpen.Question}
+
+                }
+            }
+
+
+
+            return RedirectToAction("AdminPanel", "Home");
+        }
 
         public string CoockiesChek()
         {
@@ -52,15 +116,78 @@ namespace MpdaTest.Controllers
         public IActionResult PassingSet(PassingTestModel model)
         {
 
-            return RedirectToAction("PassingSet", "Home");
+
+            foreach (var item in model.passingThemes)
+            {
+                if (item.openPassingsList != null)
+                {
+                    foreach (var item2 in item.openPassingsList)
+                    {
+                        if (item2.Text != null)
+                        {
+                            if (item2.Text.Replace(" ", "") != "")
+                            {
+                                AnswerOpenTest answerOpenTest = new AnswerOpenTest() { Answer = item2.Text, IDTestOpen = item2.ID };
+                                BD.AnswerOpenTest.Add(answerOpenTest);
+                            }
+                        }
+
+
+
+                    }
+                }
+
+                if (item.ClosePassingsList != null)
+                {
+                    foreach (var item2 in item.ClosePassingsList)
+                    {
+                        var a = BD.AnswerT.Where(x => x.ID == item2.AnswerTSelect).FirstOrDefault();
+                        a.NumberOfSelected++;
+
+                    }
+                }
+                if (item.TablePassings != null)
+                {
+                    foreach (var item2 in item.TablePassings)
+                    {
+                        foreach (var item3 in item2.TableThemes)
+                        {
+
+                            foreach (var item4 in item3.TableQues)
+                            {
+                                if (item4.Count != 0)
+                                {
+                                    AnswerTheme answer = new AnswerTheme() { AnswerText = item4.Count.ToString(), IDQuestion = item4.ID, IDTheme = item3.ID };
+                                    BD.AnswerTheme.Add(answer);
+                                }
+
+
+                            }
+
+
+                        }
+
+
+                    }
+                }
+
+
+
+
+            }
+            // BD.UserSelectTest.Where(x => x.Login.ToLower() == loginMain.ToLower()).FirstOrDefault().BoolPassed = true;
+            BD.SaveChanges();
+
+
+            return RedirectToAction("PassingTheTest", "Home");
         }
 
 
-
+        //Отображение прохождения тестов (Готово)
         public async Task<IActionResult> PassingTheTest()
         {
 
-             
+
             loginMain = CoockiesChek();
             if (loginMain != null)
             {
@@ -73,8 +200,11 @@ namespace MpdaTest.Controllers
                 passingTest.passingThemes = new List<PassingThemeModel>();
                 passingTest.Name = Test.Name;
                 passingTest.ID = Test.ID;
+                passingTest.bytes = TestOpis.ImageBit;
+                passingTest.url = TestOpis.link;
 
-                
+
+
 
 
 
@@ -90,8 +220,8 @@ namespace MpdaTest.Controllers
 
                     PassingThemeModel passingThemeModel = new PassingThemeModel();
                     passingThemeModel.Name = itemTheme.Name;
-                    passingThemeModel.ID =  itemTheme.ID;
-                    passingThemeModel.testSortsList = Sort.ToList();           
+                    passingThemeModel.ID = itemTheme.ID;
+                    passingThemeModel.testSortsList = Sort.ToList();
                     passingThemeModel.openPassingsList = new List<OpenPassing>();
                     passingThemeModel.ClosePassingsList = new List<ClosePassing>();
                     passingThemeModel.TablePassings = new List<TablePassing>();
@@ -125,7 +255,7 @@ namespace MpdaTest.Controllers
 
                             case "OpenTest":
 
-                                var Open =BD.TestOpen.Where(x=>x.ID == itemSort.IDques).FirstOrDefault();
+                                var Open = BD.TestOpen.Where(x => x.ID == itemSort.IDques).FirstOrDefault();
                                 if (Open != null)
                                 {
                                     OpenPassing openPassing = new OpenPassing();
@@ -141,7 +271,7 @@ namespace MpdaTest.Controllers
 
 
 
-                                  
+
 
                                 }
 
@@ -150,7 +280,7 @@ namespace MpdaTest.Controllers
                             case "TableTest":
                                 var Table = BD.TableTest.Where(x => x.ID == itemSort.IDques).FirstOrDefault();
 
-                                if (Table!=null)
+                                if (Table != null)
                                 {
                                     TablePassing tablePassing = new TablePassing();
                                     tablePassing.Id = Table.ID;
@@ -159,13 +289,13 @@ namespace MpdaTest.Controllers
                                     tablePassing.IsRec = Table.necessarily;
                                     tablePassing.TableThemes = new List<TableThemePassing>();
 
-                                    foreach (var itemThemeTable in BD.Theme.Where(x=>x.IDTable == Table.ID).ToList())
+                                    foreach (var itemThemeTable in BD.Theme.Where(x => x.IDTable == Table.ID).ToList())
                                     {
                                         TableThemePassing themePassing = new TableThemePassing();
                                         themePassing.ID = itemThemeTable.ID;
                                         themePassing.Name = itemThemeTable.Text;
                                         themePassing.TableQues = new List<TableQuesPassing>();
-                                        foreach (var itemQuesTable in BD.question.Where(x=> x.IDTable == Table.ID).ToList())
+                                        foreach (var itemQuesTable in BD.question.Where(x => x.IDTable == Table.ID).ToList())
                                         {
                                             TableQuesPassing quesPassing = new TableQuesPassing();
                                             quesPassing.ID = itemQuesTable.ID;
@@ -196,12 +326,15 @@ namespace MpdaTest.Controllers
                 return View(passingTest);
             }
             return RedirectToAction("vhod", "Home");
-            
+
         }
+
+
+
 
         public IActionResult vhod(LoginViewModel model)
         {
-            if (CoockiesChek()==null)
+            if (CoockiesChek() == null)
             {
                 return View(model);
             }
@@ -214,10 +347,10 @@ namespace MpdaTest.Controllers
                 }
                 else
                 {
-                    return View(model);
+                    return RedirectToAction("AdminPanel", "Home");//Переход на нужную страницу
                 }
             }
-            
+
         }
 
         [HttpPost]
@@ -238,7 +371,7 @@ namespace MpdaTest.Controllers
                         Response.Cookies.Append("Login", login, cookieOptions);
                         loginMain = login;
 
-                        if (login!= "Admin")
+                        if (login != "Admin")
                         {
                             return RedirectToAction("PassingTheTest", "Home");//Переход на нужную страницу
                         }
@@ -255,7 +388,7 @@ namespace MpdaTest.Controllers
                 }
                 else
                 {
-                    model.Mess="Неправильный логин и (или) пароль";
+                    model.Mess = "Неправильный логин и (или) пароль";
                 }
 
 
