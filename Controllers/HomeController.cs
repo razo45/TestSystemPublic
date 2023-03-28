@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using MpdaTest.BdModels;
 using MpdaTest.Models;
+using MpdaTest.Models.PassingModels;
 using MpdaTest.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace MpdaTest.Controllers
         CookieOptions cookieOptions = new CookieOptions();
         public HomeController()
         {
-            
+
         }
 
 
@@ -47,6 +47,69 @@ namespace MpdaTest.Controllers
 
         }
 
+
+        public IActionResult PassingTheTest()
+        {
+            loginMain = CoockiesChek();
+            if (loginMain != null)
+            {
+                var User = BD.UserSelectTest.Where(x => x.Login.ToLower() == loginMain.ToLower()).FirstOrDefault();
+
+                var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == User.TestID).FirstOrDefault();
+                var Test = BD.TestSistem.Where(x => x.ID == User.TestID).FirstOrDefault();
+                PassingTestModel passingTest = new PassingTestModel(TestOpis.Opis, Test.Name, Test.ID);
+
+
+                List<PassingThemeModel> passingTheme = new List<PassingThemeModel>();
+
+
+                foreach (var itemTheme in BD.ThemeTest.Where(x => x.ID == User.TestID))
+                {
+                    var Sort = from p in BD.TestSort.Where(x => x.IDtheme == itemTheme.ID).ToList()
+                               orderby p.Number ascending
+                               select p;
+
+                    PassingThemeModel passingThemeModel = new PassingThemeModel(itemTheme.Name, itemTheme.ID, Sort.ToList());
+
+                    
+
+                    foreach (var itemSort in Sort)
+                    {
+                        switch (itemSort.Type)
+                        {
+                            case "CloseTest":
+
+                                break;
+
+                            case "OpenTest":
+
+                                var Open =BD.TestOpen.Where(x=>x.ID == itemSort.ID).FirstOrDefault();
+                                if (Open != null)
+                                {
+                                    OpenPassing openPassing = new OpenPassing(Open.Question,string.Empty, Open.ID);
+                                    passingThemeModel.openPassingsList.Add(openPassing);
+                                }
+
+                                break;
+
+                            case "TableTest":
+
+                                break;
+
+                        }
+                    }
+
+                    passingTheme.Add(passingThemeModel);
+
+
+
+                }
+
+
+                passingTest.passingThemes =passingTheme;
+            }
+            return View();
+        }
 
         public IActionResult vhod()
         {

@@ -1,4 +1,5 @@
 ﻿  <title>Вход в профиль</title>
+  @model MpdaTest.ViewModels.LoginViewModel;
 <div class="u-clearfix u-sheet u-sheet-1">
         <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-1" src="/NicepageAssets/images/instagram_icon2.png" alt="" data-image-width="1200" data-image-height="1200">
         <h2 style="margin-bottom: 0px;font-weight: 600;text-align: center;padding-bottom: 0px;">Вход в личный кабинет</h2>
@@ -12,7 +13,7 @@
              <input value="1" style="display:none" type="number" data-val="true" data-val-required="The F field is required." id="F" name="F">
 
               <h5 for="email-71dc" class="u-custom-font u-label u-text-font">Логин</h5>
-              <input type="text" placeholder="Введите Ваш Login" class="u-border-2 u-border-custom-color-4 u-input u-input-rectangle u-white" required="" id="Login" name="Login" value="">
+              <input type="text" placeholder="Введите Ваш Login" class="u-border-2 u-border-custom-color-4 u-input u-input-rectangle u-white" required="" asp-action="Login" name="Login" value="">
             </div>
             <div class="u-form-group u-form-name" style="margin-top: 10px; margin-bottom: 10px;">
               <h5 for="name-71dc" class="u-custom-font u-label u-text-font">Пароль</h5>
