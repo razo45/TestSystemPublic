@@ -35,7 +35,13 @@
          
 
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+          <div class="">
+           <div class="u-container-layout u-container-layout-12">
+                         <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="" alt="" data-image-width="800" data-image-height="786">
+                          <h2 style="text-align:center">@Model.Opisanie</h2>    
 
+           </div>
+          </div>
 
             <form method="post" asp-controller="Home" asp-action="PassingSet">
               <input type="hidden" asp-for="ID" value="@Model.ID">
@@ -48,7 +54,7 @@
                         //Передача id темы
 
                         for (int iS = 0; iS < Model.passingThemes[i].testSortsList.Count(); iS++)
-                    {
+                        {
                         int item = 0;
                         switch (Model.passingThemes[i].testSortsList[iS].Type)
                         {
@@ -111,6 +117,90 @@
                                 break;
 
                             case "TableTest":
+                                    var Table = Model.passingThemes[i].TablePassings.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                    item = Model.passingThemes[i].TablePassings.IndexOf(Table);
+                                    if (Table!=null)
+                                    {
+                                        <div class="u-expanded-width u-table u-table-responsive u-table-1">
+                                            <h3 style="text-align:center">@Table.Name</h3>
+
+                                            <table class="u-table-entity u-table-entity-1">
+
+                                                <colgroup>
+                                                        <col width="20%">
+                                                        <col width="20%">
+                                                        <col width="20%">
+                                                        <col width="20%">
+                                                        <col width="20%">
+
+                                                </colgroup>
+
+                                                <thead class="u-black u-table-header u-table-header-1">
+                                                    <tr style="height: 21px;">
+                                                        <th class="u-border-1 u-border-black u-table-cell"> 
+                                                            @Table.Opisanie
+                                                        </th>
+
+                                                            @for (int iNameQ = 0; iNameQ <Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues.Count(); iNameQ++)
+                                                            {
+                                                             <th class="u-border-1 u-border-black u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues[iNameQ].Name</th>
+
+                                                            }
+
+
+                                                            
+
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="u-table-body">
+
+                                                            @for (int iThemeTable = 0; iThemeTable <Model.passingThemes[i].TablePassings[item].TableThemes.Count(); iThemeTable++)
+                                                            {
+                                                              <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID"    value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID">
+                                                              <tr style="height: 75px;">
+                                                                <td class="u-border-1 u-border-grey-30 u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].Name</td>
+
+                                                                    @for (int iQ = 0; iQ <Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues.Count(); iQ++)
+                                                                    {
+                                                                        <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID" value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID">
+                                                                        <td class="u-border-1 u-border-grey-30 u-table-cell">
+                                                                                <select style="width: -moz-available;background-color: #0000;border-radius: 7px;border-width: 2px !important;;border: groove;" title="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Name @Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].Name " data-val="true" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Count" >
+
+                                                                                    @if (!Model.passingThemes[i].TablePassings[item].IsRec)
+                                                                                    {
+                                                                                        <option value="0" selected="selected">Нет ответа</option>
+                                                                                    }
+
+                                                                                        
+                                                                                    <option value="1">1 балл</option>
+                                                                                    <option value="2">2 балла</option>
+                                                                                    <option value="3">3 балла</option>
+                                                                                    <option value="4">4 балла</option>
+                                                                                    <option value="5">5 баллов</option>
+
+                                                                                </select>
+                                                                        </td>
+                                                                    }
+
+                                                                
+
+                                                              </tr>
+                                                            
+                                                            }
+                                                            
+
+                                                        
+                                                  
+
+
+                                                </tbody>
+                                            </table>
+                                         </div>
+
+
+
+                                    }
 
                                 break;
 

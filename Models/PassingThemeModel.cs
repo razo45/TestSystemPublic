@@ -13,6 +13,7 @@ namespace MpdaTest.Models
 
         public List<OpenPassing> openPassingsList{ get; set; }
         public List<ClosePassing> ClosePassingsList { get; set; }
+        public List<TablePassing> TablePassings { get; set; }
 
 
     }

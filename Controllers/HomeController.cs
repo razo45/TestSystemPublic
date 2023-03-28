@@ -94,6 +94,7 @@ namespace MpdaTest.Controllers
                     passingThemeModel.testSortsList = Sort.ToList();           
                     passingThemeModel.openPassingsList = new List<OpenPassing>();
                     passingThemeModel.ClosePassingsList = new List<ClosePassing>();
+                    passingThemeModel.TablePassings = new List<TablePassing>();
 
 
 
@@ -147,9 +148,40 @@ namespace MpdaTest.Controllers
                                 break;
 
                             case "TableTest":
+                                var Table = BD.TableTest.Where(x => x.ID == itemSort.IDques).FirstOrDefault();
 
-                                
+                                if (Table!=null)
+                                {
+                                    TablePassing tablePassing = new TablePassing();
+                                    tablePassing.Id = Table.ID;
+                                    tablePassing.Opisanie = Table.Desp;
+                                    tablePassing.Name = Table.Name;
+                                    tablePassing.IsRec = Table.necessarily;
+                                    tablePassing.TableThemes = new List<TableThemePassing>();
 
+                                    foreach (var itemThemeTable in BD.Theme.Where(x=>x.IDTable == Table.ID).ToList())
+                                    {
+                                        TableThemePassing themePassing = new TableThemePassing();
+                                        themePassing.ID = itemThemeTable.ID;
+                                        themePassing.Name = itemThemeTable.Text;
+                                        themePassing.TableQues = new List<TableQuesPassing>();
+                                        foreach (var itemQuesTable in BD.question.Where(x=> x.IDTable == Table.ID).ToList())
+                                        {
+                                            TableQuesPassing quesPassing = new TableQuesPassing();
+                                            quesPassing.ID = itemQuesTable.ID;
+                                            quesPassing.Name = itemQuesTable.Text;
+                                            themePassing.TableQues.Add(quesPassing);
+                                        }
+                                        tablePassing.TableThemes.Add(themePassing);
+
+                                    }
+
+                                    passingThemeModel.TablePassings.Add(tablePassing);
+                                }
+                                else
+                                {
+                                    BD.TestSort.Remove(itemSort);
+                                }
                                 break;
 
                         }
@@ -169,7 +201,23 @@ namespace MpdaTest.Controllers
 
         public IActionResult vhod(LoginViewModel model)
         {
-            return View(model);
+            if (CoockiesChek()==null)
+            {
+                return View(model);
+            }
+            else
+            {
+                loginMain = CoockiesChek();
+                if (loginMain != "Admin")
+                {
+                    return RedirectToAction("PassingTheTest", "Home");//Переход на нужную страницу
+                }
+                else
+                {
+                    return View(model);
+                }
+            }
+            
         }
 
         [HttpPost]
@@ -190,7 +238,14 @@ namespace MpdaTest.Controllers
                         Response.Cookies.Append("Login", login, cookieOptions);
                         loginMain = login;
 
-                        return RedirectToAction("PassingTheTest", "Home");//Переход на нужную страницу
+                        if (login!= "Admin")
+                        {
+                            return RedirectToAction("PassingTheTest", "Home");//Переход на нужную страницу
+                        }
+                        else
+                        {
+
+                        }
 
                     }
                     else
