@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -301,62 +302,109 @@ namespace MpdaTest.Controllers
         #endregion
 
 
+        [HttpPost]
+        public IActionResult OpisMember(PassingTestModel model)
+        {
+            OpisTheme opisTheme = this.BD.OpisTheme.Where((x => x.IdTheme == model.OpisCreate.IDTestSistem)).FirstOrDefault();
+            if (opisTheme == null)
+            {
+                OpisTheme entity = new OpisTheme()
+                {
+                    IdTheme = model.OpisCreate.IDTestSistem,
+                    link = model.OpisCreate.Link,
+                    Opis = model.OpisCreate.Opis
+                };
+                if (model.OpisCreate.FileBinar != null)
+                {
+                    byte[] numArray = null;
+                    using (BinaryReader binaryReader = new BinaryReader(model.OpisCreate.FileBinar.OpenReadStream()))
+                        numArray = binaryReader.ReadBytes((int)model.OpisCreate.FileBinar.Length);
+                    entity.ImageBit = numArray;
+                }
+                this.BD.OpisTheme.Add(entity);
+            }
+            else
+            {
+                opisTheme.Opis = model.OpisCreate.Opis;
+                opisTheme.link = model.OpisCreate.Link;
+                opisTheme.IdTheme = model.OpisCreate.IDTestSistem;
+                if (model.OpisCreate.FileBinar != null)
+                {
+                    byte[] numArray = (byte[])null;
+                    using (BinaryReader binaryReader = new BinaryReader(model.OpisCreate.FileBinar.OpenReadStream()))
+                        numArray = binaryReader.ReadBytes((int)model.OpisCreate.FileBinar.Length);
+                    opisTheme.ImageBit = numArray;
+                }
+                else
+                    opisTheme.ImageBit = (byte[])null;
+            }
+            this.BD.SaveChanges();
+            return RedirectToAction("ChangingTest", "Home", (object)new
+            {
+                IdTest = model.OpisCreate.IDTestSistem
+            });
+        }
+
+
+        //Добавить проверку на админа
         public async Task<IActionResult> DeleteTheme(int IdTheme, int IdTest)
         {
 
-               
 
-                //Удаление открытого вопроса
-                foreach (var itemOpen in await BD.TestOpen.Where(x => x.IDTheme == IdTheme).ToListAsync())
+
+            //Удаление открытого вопроса
+            foreach (var itemOpen in await BD.TestOpen.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            {
+                foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
                 {
-                    foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
-                    {
-                        BD.AnswerOpenTest.Remove(itemOpenAnswer);
-                    }
-                    BD.TestOpen.Remove(itemOpen);
+                    BD.AnswerOpenTest.Remove(itemOpenAnswer);
                 }
+                BD.TestOpen.Remove(itemOpen);
+            }
 
-                //Удаление вопроса с выбором ответа
-                foreach (var itemAnswer in await BD.TestAnswer.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            //Удаление вопроса с выбором ответа
+            foreach (var itemAnswer in await BD.TestAnswer.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            {
+                foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
                 {
-                    foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
-                    {
-                        BD.AnswerT.Remove(itemAnswerT);
-                    }
-                    BD.TestAnswer.Remove(itemAnswer);
+                    BD.AnswerT.Remove(itemAnswerT);
                 }
+                BD.TestAnswer.Remove(itemAnswer);
+            }
 
-                //удаление табличного вопроса
-                foreach (var itemTable in await BD.TableTest.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            //удаление табличного вопроса
+            foreach (var itemTable in await BD.TableTest.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            {
+                foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
                 {
-                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
                     {
-                        foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
-                        {
-                            BD.AnswerTheme.Remove(itemAnswerTheme);
-                        }
-                        BD.Theme.Remove(itemTheme);
+                        BD.AnswerTheme.Remove(itemAnswerTheme);
                     }
-                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
-                    {
-                        BD.question.Remove(itemQuestion);
-                    }
-                    BD.TableTest.Remove(itemTable);
+                    BD.Theme.Remove(itemTheme);
                 }
-
-                //Удаление Сортировочного листа
-                foreach (var itemSort in await BD.TestSort.Where(x => x.IDtheme == IdTheme).ToListAsync())
+                foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
                 {
-                    BD.TestSort.Remove(itemSort);
+                    BD.question.Remove(itemQuestion);
                 }
+                BD.TableTest.Remove(itemTable);
+            }
+
+            //Удаление Сортировочного листа
+            foreach (var itemSort in await BD.TestSort.Where(x => x.IDtheme == IdTheme).ToListAsync())
+            {
+                BD.TestSort.Remove(itemSort);
+            }
 
 
-            BD.ThemeTest.Remove( await BD.ThemeTest.Where(x=>x.ID== IdTheme).FirstOrDefaultAsync());
+            BD.ThemeTest.Remove(await BD.ThemeTest.Where(x => x.ID == IdTheme).FirstOrDefaultAsync());
             await BD.SaveChangesAsync();
 
-            return RedirectToAction("ChangingTest", "Home", new {IdTest= IdTest});
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = IdTest });
         }
 
+
+        //Добавить проверку на админа
         public async Task<IActionResult> CreateTheme(PassingTestModel model)
         {
             ThemeTest NewTheme = new ThemeTest()
@@ -368,6 +416,82 @@ namespace MpdaTest.Controllers
             await BD.SaveChangesAsync();
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createTheme.IdTest });
         }
+
+        public IActionResult CreateTable(PassingTestModel model)
+        {
+            int idthem = model.CreateTable.IdTheme;
+            if (model.CreateTable.TableDes.Replace(" ", "") != "" && model.CreateTable.TableName.Replace(" ", "") != "" && model.CreateTable.Themes.Replace(" ", "") != "" && model.CreateTable.Q.Replace(" ", "") != "")
+            {
+                TableTest entity1 = new TableTest()
+                {
+                    IDTheme = model.CreateTable.IdTheme,
+                    Name = model.CreateTable.TableName,
+                    Desp = model.CreateTable.TableDes,
+                    necessarily = model.CreateTable.IsRec
+                };
+                this.BD.TableTest.Add(entity1);
+                this.BD.SaveChanges();
+
+
+
+                string[] strArray1 = model.CreateTable.Themes.Split(new[] { Environment.NewLine },StringSplitOptions.None);
+                string[] strArray2 = model.CreateTable.Q.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+
+                foreach (string str in strArray1)
+                {
+                    this.BD.Theme.Add(new Theme()
+                    {
+                        IDTable = entity1.ID,
+                        Text = str
+                    });
+                }
+
+                foreach (string str in strArray2)
+                {
+                    this.BD.question.Add(new question()
+                    {
+                        IDTable = entity1.ID,
+                        Text = str
+                    });
+                }
+
+                this.BD.SaveChanges();
+
+                if (BD.TestSort.Where(x => x.IDtheme == model.CreateTable.IdTheme).Any())
+                {
+                    var CountSort = BD.TestSort.Where(x => x.IDtheme == model.CreateTable.IdTheme).Count();
+                    TestSort NewSort = new TestSort()
+                    {
+                        IDtheme = model.CreateTable.IdTheme,
+                        IDques = entity1.ID,
+                        Number = CountSort+1,
+                        Type = "TableTest"
+
+                    };
+                    BD.TestSort.Add(NewSort);
+                }
+                else
+                {
+                    TestSort NewSort = new TestSort()
+                    {
+                        IDtheme = model.CreateTable.IdTheme,
+                        IDques = entity1.ID,
+                        Number = 1,
+                        Type = "TableTest"
+
+                    };
+                    BD.TestSort.Add(NewSort);
+                }
+                this.BD.SaveChanges();
+
+            }
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = model.CreateTable.IdTest });
+        }
+
+
+
+
         //Отображение редактирования теста ✔
         //Добавить проверку на админа
         public IActionResult ChangingTest(int IdTest)
@@ -380,7 +504,11 @@ namespace MpdaTest.Controllers
             var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == IdTest).FirstOrDefault();
             var Test = BD.TestSistem.Where(x => x.ID == IdTest).FirstOrDefault();
             PassingTestModel passingTest = new PassingTestModel();
+
+
             passingTest.createTheme = new CreateTheme();
+            passingTest.OpisCreate = new OpisCreate();
+
             if (TestOpis != null) passingTest.Opisanie = TestOpis.Opis;
             passingTest.passingThemes = new List<PassingThemeModel>();
             passingTest.Name = Test.Name;
@@ -489,7 +617,7 @@ namespace MpdaTest.Controllers
                             break;
 
                     }
-                    
+
                 }
                 BD.SaveChangesAsync();
                 passingTest.passingThemes.Add(passingThemeModel);

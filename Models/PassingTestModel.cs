@@ -24,6 +24,10 @@ namespace MpdaTest.Models
 
         public CreateTheme createTheme { get; set; }
 
+        public OpisCreate OpisCreate { get; set; }
+
+        public CreateTable CreateTable { get; set; }    
+
         public List<PassingThemeModel> passingThemes { get; set; }  
 
    

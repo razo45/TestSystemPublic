@@ -54,20 +54,20 @@
                                 <div class="u-container-layout u-container-layout-3">
                                     <div class="u-form u-form-3">
                                         <!-- Добавление Описания -->
-                                      <form method="POST" enctype="multipart/form-data" source="custom" style="padding: 10px;" action="/Home/OpisMember">
-                                       <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
+                                      <form method="POST" enctype="multipart/form-data" source="custom" style="padding: 10px;" asp-controller="Home" asp-action="OpisMember">
+                                       <input type="hidden" value="@Model.ID" required="" asp-for="OpisCreate.IDTestSistem" >
 
                                           <div class="u-form-group u-form-message">
                                           <label for="message-36ae" class="u-label">Описание теста</label>
-                                          <input type="text" placeholder="Введите описание теста" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="Opis" name="Opis" value="Братие и сестры! Этот тест создан в ознакомительных целях. Все совпадения вымышлены. Все права защищены!">
+                                          <input type="text" placeholder="Введите описание теста" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="OpisCreate.Opis"  value="@Model.Opisanie">
                                         </div>
                                             <div class="u-form-group u-form-message">
                                           <label for="message-36ae" class="u-label">Ссылка изображения</label>
-                                          <input type="text" placeholder="Ссылка которая будет открываться при нажатии на изображение" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="Link" name="Link" value="">
+                                          <input type="text" placeholder="Ссылка которая будет открываться при нажатии на изображение" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="OpisCreate.Link"  value="@Model.url">
                                         </div>
                                             <div class="u-form-group u-form-message">
                                           <label for="message-36ae" class="u-label">Изображение</label>
-                                        <input type="file" accept="" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="FileBinar" name="FileBinar">
+                                        <input type="file" asp-for="OpisCreate.FileBinar" accept="" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" >
                                         </div>
                                          <div class="u-align-left u-form-group u-form-submit">
                                           <a href="#" class="u-btn u-btn-submit u-button-style">Сохранить</a>
@@ -83,7 +83,7 @@
                                 <div class="u-container-layout u-container-layout-3">
                                     <div class="u-form u-form-3">
                                         <!-- Добавление темы -->
-                                      <form method="post" style="padding: 10px;" asp-controller="Home" asp-action="CreateUser">
+                                      <form method="post" style="padding: 10px;" asp-controller="Home" asp-action="CreateTheme">
                                        <input type="hidden" value="@Model.ID" required="" asp-for="createTheme.IdTest"  >
 
                                           <div class="u-form-group u-form-message">
@@ -326,34 +326,41 @@
                                     <div class="u-form u-form-2">
 
                                         <!-- Добавление таблицы -->
-                                      <form method="post" style="padding: 10px;" action="/Home/CreateTable">
-                                       <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
-                                        <input type="hidden" value="274" required="" id="idTheme" name="idTheme">
+                                      <form method="post" style="padding: 10px;" asp-action="CreateTable", asp-controller="Home">
+                                       <input type="hidden" value="@Model.ID" required="" data-val="true" data-val-required="The IDTestSistem field is required." asp-for="CreateTable.IdTest">
+                                        <input type="hidden" value="@Model.passingThemes[i].ID" required="" asp-for="CreateTable.IdTheme">
 
                                           <div class="u-form-group u-form-message">
                                             <label for="message-63ce" class="u-label">Название таблицы</label>
-                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TableName" name="TableName"></textarea>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" asp-for="CreateTable.TableName"></textarea>
                                           </div>
+
                                           <div class="u-form-group u-form-message">
                                           <label for="message-63ce" class="u-label">Описание первой ячейки</label>
-                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TableDes" name="TableDes"></textarea>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" asp-for="CreateTable.TableDes"></textarea>
                                         </div>
+
                                         <div class="u-form-group u-form-message">
                                           <label for="message-63ce" class="u-label">Темы</label>
-                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="Themes" name="Themes"></textarea>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" asp-for="CreateTable.Themes"></textarea>
                                         </div>
+
                                         <div class="u-form-group u-form-textarea u-form-group-5">
                                           <label for="textarea-ed30" class="u-label">Вопросы</label>
-                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="Q" name="Q"></textarea>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" asp-for="CreateTable.Q"></textarea>
                                         </div>
+
                                         <div class="u-form-checkbox u-form-group u-form-group-2">
-                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
+                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." asp-for="CreateTable.IsRec" value="true">
                                           <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
                                         </div>
+
                                         <div class="u-align-left u-form-group u-form-submit">
                                           <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
                                           <input type="submit" value="submit" class="u-form-control-hidden">
                                         </div>
+
+
                                       <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"><input name="IsRec" type="hidden" value="false"></form>
                                     </div>
                                   </div>
@@ -362,6 +369,8 @@
                                   <div class="u-container-layout u-container-layout-3">
                                     <div class="u-form u-form-3">
                                         <!-- Добавление вопроса с ответами -->
+
+
                                       <form method="post" style="padding: 10px;" action="/Home/CreateVopr">
                                        <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
                                         <input type="hidden" value="274" required="" id="idTheme" name="idTheme">
