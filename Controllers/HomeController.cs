@@ -194,6 +194,7 @@ namespace MpdaTest.Controllers
         public IActionResult CreateUser()
         {
             return RedirectToAction("AdminPanel", "Home");
+
         }
 
 
