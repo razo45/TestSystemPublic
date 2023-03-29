@@ -104,8 +104,7 @@
           <div class="u-container-layout u-container-layout-3">
                                   
           </div>
-            <form method="post" asp-controller="Home" asp-action="PassingSet">
-              <input type="hidden" asp-for="ID" value="@Model.ID">
+            
 
                     @for (int i = 0; i < Model.passingThemes.Count(); i++)
                     {
@@ -190,13 +189,13 @@
                                     var Table = Model.passingThemes[i].TablePassings.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
                                     item = Model.passingThemes[i].TablePassings.IndexOf(Table);
                                     if (Table!=null)
-                                    {   <div class="col-lg-12" style="text-align: left;">
+                                    {   
+                                        <div class="u-expanded-width u-table u-table-responsive u-table-1">
+                                            <h3 style="text-align:center">@Table.Name</h3>
+                                            <div class="col-lg-12" style="text-align: left;">
                                         <a href="/home/DeleteVopr?IdQuews=762&amp;IDTestSistem=67" class="submit-btn">Удалить вопрос</a><br>
                                         <a href="/home/EditQuestion/762?Type=CloseTest&amp;IdTest=67" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
                                         </div>
-                                        <div class="u-expanded-width u-table u-table-responsive u-table-1">
-                                            <h3 style="text-align:center">@Table.Name</h3>
-
                                             <table class="u-table-entity u-table-entity-1">
 
                                                 <colgroup>
@@ -299,25 +298,26 @@
                                 <div class="u-container-style u-tab-active u-tab-pane" id="tab-b528" role="tabpanel" aria-labelledby="link-tab-b528">
                                   <div class="u-container-layout u-container-layout-1">
                                     <div class="u-form u-form-1">
+
                                         <!-- Добавление открытого вопроса -->
-                                      <form method="post" style="padding: 10px;" action="/Home/CreateOpen">
-                                       <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
-                                        <input type="hidden" value="274" required="" id="idTheme" name="idTheme">
+                                      <form method="post" style="padding: 10px;" asp-action="CreateOpen" asp-controller="Home">
+                                           <input type="hidden" value="@Model.ID" required=""  asp-for="createOpen.IdTest">
+                                            <input type="hidden" value="@Model.passingThemes[i].ID" required="" asp-for="createOpen.IdTheme">
 
-                                          <div class="u-form-group u-form-message">
-                                          <label for="message-36ae" class="u-label">Текст вопроса</label>
-                                          <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TextOpenTest" name="TextOpenTest"></textarea>
-                                        </div>
-                                        <div class="u-form-checkbox u-form-group u-form-group-2">
-                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
-                                          <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
-                                        </div>
-                                        <div class="u-align-left u-form-group u-form-submit">
-                                          <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
-                                          <input type="submit" value="submit" class="u-form-control-hidden">
-                                        </div>
+                                            <div class="u-form-group u-form-message">
+                                              <label for="message-36ae" class="u-label">Текст вопроса</label>
+                                              <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" asp-for="createOpen.Name"></textarea>
+                                            </div>
+                                            <div class="u-form-checkbox u-form-group u-form-group-2">
+                                              <input type="checkbox" asp-for="createOpen.IsRec" value="true">
+                                              <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
+                                            </div>
+                                            <div class="u-align-left u-form-group u-form-submit">
+                                              <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
+                                              <input type="submit" value="submit" class="u-form-control-hidden">
+                                            </div>
 
-                                      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"><input name="IsRec" type="hidden" value="false"></form>
+                                      </form>
                                     </div>
                                   </div>
                                 </div>
@@ -326,7 +326,7 @@
                                     <div class="u-form u-form-2">
 
                                         <!-- Добавление таблицы -->
-                                      <form method="post" style="padding: 10px;" asp-action="CreateTable", asp-controller="Home">
+                                      <form method="post" style="padding: 10px;" asp-action="CreateTable" asp-controller="Home">
                                        <input type="hidden" value="@Model.ID" required="" data-val="true" data-val-required="The IDTestSistem field is required." asp-for="CreateTable.IdTest">
                                         <input type="hidden" value="@Model.passingThemes[i].ID" required="" asp-for="CreateTable.IdTheme">
 
@@ -361,7 +361,7 @@
                                         </div>
 
 
-                                      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"><input name="IsRec" type="hidden" value="false"></form>
+                                      </form>
                                     </div>
                                   </div>
                               </div>
@@ -404,7 +404,7 @@
             <div class="col-lg-12">
             <button class="u-btn u-btn-submit u-button-style">Отправить ответы</button>
             </div>
-    </form>
+  
     </div>
     </section>
   

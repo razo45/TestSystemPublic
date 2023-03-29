@@ -416,7 +416,8 @@ namespace MpdaTest.Controllers
             await BD.SaveChangesAsync();
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createTheme.IdTest });
         }
-
+        //Создание таблиц в редакторе тестов ✔
+        //Добавить проверку на админа
         public IActionResult CreateTable(PassingTestModel model)
         {
             int idthem = model.CreateTable.IdTheme;
@@ -489,6 +490,51 @@ namespace MpdaTest.Controllers
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.CreateTable.IdTest });
         }
 
+
+        public IActionResult CreateOpen(PassingTestModel model)
+        {
+            if (model.createOpen.Name.Replace(" ", "") != "")
+            {
+                int idthem = model.createOpen.IdTheme;
+                TestOpen entity1 = new TestOpen()
+                {
+                    IDTheme = model.createOpen.IdTheme,
+                    Question = model.createOpen.Name,
+                    necessarily = model.createOpen.IsRec
+                };
+                this.BD.TestOpen.Add(entity1);
+                this.BD.SaveChanges();
+
+                if (BD.TestSort.Where(x => x.IDtheme == model.createOpen.IdTheme).Any())
+                {
+                    var CountSort = BD.TestSort.Where(x => x.IDtheme == model.createOpen.IdTheme).Count();
+                    TestSort NewSort = new TestSort()
+                    {
+                        IDtheme = model.createOpen.IdTheme,
+                        IDques = entity1.ID,
+                        Number = CountSort + 1,
+                        Type = "OpenTest"
+
+                    };
+                    BD.TestSort.Add(NewSort);
+                }
+                else
+                {
+                    TestSort NewSort = new TestSort()
+                    {
+                        IDtheme = model.createOpen.IdTheme,
+                        IDques = entity1.ID,
+                        Number = 1,
+                        Type = "OpenTest"
+
+                    };
+                    BD.TestSort.Add(NewSort);
+                }
+
+                this.BD.SaveChanges();
+            }
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createOpen.IdTest });
+        }
 
 
 
