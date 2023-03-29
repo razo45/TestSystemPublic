@@ -302,6 +302,10 @@ namespace MpdaTest.Controllers
         #endregion
 
 
+        //Создание описания в редакторе тестов ✔
+        //Добавить проверку на админа
+
+
         [HttpPost]
         public IActionResult OpisMember(PassingTestModel model)
         {
@@ -345,7 +349,67 @@ namespace MpdaTest.Controllers
             });
         }
 
+        public async Task<IActionResult> DeleteQuestion(int IdTest, int IDques, string Type)
+        {
+            switch (Type)
+            {
+                case "CloseTest":
 
+                    var itemAnswer = await BD.TestAnswer.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
+                    {
+                        BD.AnswerT.Remove(itemAnswerT);
+                    }
+                    BD.TestAnswer.Remove(itemAnswer);
+
+                  BD.TestSort.Remove( await BD.TestSort.Where(x=> x.IDques ==IDques && x.Type == Type).FirstOrDefaultAsync());
+                    break;
+
+                case "OpenTest":
+
+
+
+                    //Удаление открытого вопроса
+                    var itemOpen = await BD.TestOpen.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+
+                    foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
+                    {
+                        BD.AnswerOpenTest.Remove(itemOpenAnswer);
+                    }
+                    BD.TestOpen.Remove(itemOpen);
+
+                    BD.TestSort.Remove(await BD.TestSort.Where(x => x.IDques == IDques && x.Type == Type).FirstOrDefaultAsync());
+
+                    break;
+
+                case "TableTest":
+                    var itemTable = await BD.TableTest.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
+                        {
+                            BD.AnswerTheme.Remove(itemAnswerTheme);
+                        }
+                        BD.Theme.Remove(itemTheme);
+                    }
+                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        BD.question.Remove(itemQuestion);
+                    }
+                    BD.TableTest.Remove(itemTable);
+                    BD.TestSort.Remove(await BD.TestSort.Where(x => x.IDques == IDques && x.Type == Type).FirstOrDefaultAsync());
+
+                    break;
+
+            }
+
+           await BD.SaveChangesAsync();
+
+
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = IdTest });
+        }
+
+        //Удаление темы теста ✔
         //Добавить проверку на админа
         public async Task<IActionResult> DeleteTheme(int IdTheme, int IdTest)
         {
@@ -404,6 +468,9 @@ namespace MpdaTest.Controllers
         }
 
 
+        #region Создание элементов в редактировании теста
+
+        //Создание темы в редакторе тестов ✔
         //Добавить проверку на админа
         public async Task<IActionResult> CreateTheme(PassingTestModel model)
         {
@@ -416,6 +483,8 @@ namespace MpdaTest.Controllers
             await BD.SaveChangesAsync();
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createTheme.IdTest });
         }
+
+
         //Создание таблиц в редакторе тестов ✔
         //Добавить проверку на админа
         public IActionResult CreateTable(PassingTestModel model)
@@ -435,7 +504,7 @@ namespace MpdaTest.Controllers
 
 
 
-                string[] strArray1 = model.CreateTable.Themes.Split(new[] { Environment.NewLine },StringSplitOptions.None);
+                string[] strArray1 = model.CreateTable.Themes.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 string[] strArray2 = model.CreateTable.Q.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
 
@@ -466,7 +535,7 @@ namespace MpdaTest.Controllers
                     {
                         IDtheme = model.CreateTable.IdTheme,
                         IDques = entity1.ID,
-                        Number = CountSort+1,
+                        Number = CountSort + 1,
                         Type = "TableTest"
 
                     };
@@ -491,6 +560,8 @@ namespace MpdaTest.Controllers
         }
 
 
+        //Отображение редактирования теста ✔
+        //Добавить проверку на админа
         public IActionResult CreateOpen(PassingTestModel model)
         {
             if (model.createOpen.Name.Replace(" ", "") != "")
@@ -536,6 +607,81 @@ namespace MpdaTest.Controllers
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createOpen.IdTest });
         }
 
+
+        //Добавление вопроса с вариантами ответа ✔
+        //Добавить проверку на админа
+        public IActionResult CreateVopr(PassingTestModel model)
+        {
+            if (model.createAnswer.TextOtvTest.Replace(" ", "") != "")
+            {
+                int idthem = model.createAnswer.IdTheme;
+                TestAnswer entity1 = new TestAnswer()
+                {
+                    IDTheme = model.createAnswer.IdTheme,
+                    necessarily = model.createAnswer.IsRec,
+                    Question = model.createAnswer.TextOtvTest
+                };
+
+
+                this.BD.TestAnswer.Add(entity1);
+                this.BD.SaveChanges();
+                if (model.createAnswer.Q == null)
+                {
+                    for (int index = 1; index <= 5; ++index)
+                        this.BD.AnswerT.Add(new AnswerT()
+                        {
+                            Correct = model.createAnswer.IsRec,
+                            IDTestAnswer = entity1.ID,
+                            NumberOfSelected = 0,
+                            Text = index.ToString()
+                        });
+                }
+                else
+                {
+                    string[] source = model.createAnswer.Q.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    for (int index = 1; index <= source.Count(); ++index)
+                        this.BD.AnswerT.Add(new AnswerT()
+                        {
+                            Correct = model.createAnswer.IsRec,
+                            IDTestAnswer = entity1.ID,
+                            NumberOfSelected = 0,
+                            Text = index.ToString(),
+                            TextUser = source[index - 1]
+                        });
+                }
+                this.BD.SaveChanges();
+
+                if (BD.TestSort.Where(x => x.IDtheme == model.createAnswer.IdTheme).Any())
+                {
+                    var CountSort = BD.TestSort.Where(x => x.IDtheme == model.createAnswer.IdTheme).Count();
+                    TestSort NewSort = new TestSort()
+                    {
+                        IDtheme = model.createAnswer.IdTheme,
+                        IDques = entity1.ID,
+                        Number = CountSort + 1,
+                        Type = "CloseTest"
+
+                    };
+                    BD.TestSort.Add(NewSort);
+                }
+                else
+                {
+                    TestSort NewSort = new TestSort()
+                    {
+                        IDtheme = model.createAnswer.IdTheme,
+                        IDques = entity1.ID,
+                        Number = 1,
+                        Type = "CloseTest"
+
+                    };
+                    BD.TestSort.Add(NewSort);
+                }
+                this.BD.SaveChanges();
+            }
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createAnswer.IdTest });
+        }
+
+        #endregion
 
 
         //Отображение редактирования теста ✔
@@ -676,6 +822,7 @@ namespace MpdaTest.Controllers
 
         }
 
+
         //Проверка логина в Coockie ✔
         public string CoockiesChek()
         {
@@ -697,6 +844,7 @@ namespace MpdaTest.Controllers
 
         }
 
+
         //Генерация случайного пароля ✔
         public string GetPass()
         {
@@ -710,6 +858,7 @@ namespace MpdaTest.Controllers
             }
             return pass;
         }
+
 
         //Отправка ответов на тест ✔
         [HttpPost]
@@ -746,6 +895,7 @@ namespace MpdaTest.Controllers
 
                     }
                 }
+
                 if (item.TablePassings != null)
                 {
                     foreach (var item2 in item.TablePassings)
@@ -770,10 +920,6 @@ namespace MpdaTest.Controllers
 
                     }
                 }
-
-
-
-
             }
             // BD.UserSelectTest.Where(x => x.Login.ToLower() == loginMain.ToLower()).FirstOrDefault().BoolPassed = true;
             BD.SaveChanges();
@@ -783,6 +929,7 @@ namespace MpdaTest.Controllers
         }
 
         //Отображение прохождения тестов ✔
+        //Добавить проверку на доступ к курсу и проврку на (Прошел/Не прошел)
         public async Task<IActionResult> PassingTheTest()
         {
 

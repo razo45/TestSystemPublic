@@ -193,7 +193,7 @@
                                         <div class="u-expanded-width u-table u-table-responsive u-table-1">
                                             <h3 style="text-align:center">@Table.Name</h3>
                                             <div class="col-lg-12" style="text-align: left;">
-                                        <a href="/home/DeleteVopr?IdQuews=762&amp;IDTestSistem=67" class="submit-btn">Удалить вопрос</a><br>
+                                        <a href="@Url.Action("","",new{IdTest = @Model.ID, IDques =Table.Id, Type})" class="submit-btn">Удалить вопрос</a><br>
                                         <a href="/home/EditQuestion/762?Type=CloseTest&amp;IdTest=67" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
                                         </div>
                                             <table class="u-table-entity u-table-entity-1">
@@ -371,20 +371,20 @@
                                         <!-- Добавление вопроса с ответами -->
 
 
-                                      <form method="post" style="padding: 10px;" action="/Home/CreateVopr">
-                                       <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
-                                        <input type="hidden" value="274" required="" id="idTheme" name="idTheme">
+                                      <form method="post" style="padding: 10px;" asp-action="CreateVopr" asp-controller="Home">
+                                       <input type="hidden" value="@Model.ID" required=""  asp-for="createAnswer.IdTest">
+                                            <input type="hidden" value="@Model.passingThemes[i].ID" required="" asp-for="createAnswer.IdTheme">
 
                                           <div class="u-form-group u-form-message">
                                           <label for="message-36ae" class="u-label">Текст вопроса</label>
-                                          <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TextOtvTest" name="TextOtvTest"></textarea>
+                                          <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" asp-for="createAnswer.TextOtvTest" ></textarea>
                                         </div>
                                         <div class="u-form-group u-form-textarea u-form-group-5">
                                           <label for="textarea-ed30" class="u-label">Ответы</label>
-                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="Q" name="Q"></textarea>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="createAnswer.Q"></textarea>
                                         </div>
                                          <div class="u-form-checkbox u-form-group u-form-group-2">
-                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
+                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." asp-for="createAnswer.IsRec" value="true">
                                           <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
                                         </div>
                                         <p class="news__item-date" style="text-align: left;">*При пустом поле "Ответы" автоматически присваиваются варианты ответов от 1 до 5*</p>

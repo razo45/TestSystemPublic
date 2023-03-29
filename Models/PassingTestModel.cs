@@ -28,6 +28,7 @@ namespace MpdaTest.Models
 
         public CreateTable CreateTable { get; set; }
         public CreateOpen createOpen { get; set; }
+        public CreateAnswer createAnswer { get; set; }  
 
         public List<PassingThemeModel> passingThemes { get; set; }  
 
