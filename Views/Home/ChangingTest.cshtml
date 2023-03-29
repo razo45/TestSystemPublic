@@ -33,7 +33,7 @@
 
     <section class="u-align-center u-clearfix u-section-1" id="sec-e832">
          
-           <h2 style="text-align:center">@Model.Name</h2>
+        <h2 style="text-align:center">@Model.Name</h2>
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
           <div class="">
            <div class="u-container-layout u-container-layout-12">
@@ -43,18 +43,17 @@
                }
                else
                {
-                   if ( Model.bytes!=null)
+                    if ( Model.bytes!=null)
                    {
                     <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))" >
 
                    }
                }
                <h2 style="text-align:center">@Model.Opisanie</h2>  
-           </div>
-          </div>
-          <div class="u-container-layout u-container-layout-3">
+               
+                                <div class="u-container-layout u-container-layout-3">
                                     <div class="u-form u-form-3">
-                                        <!-- Добавление темы -->
+                                        <!-- Добавление Описания -->
                                       <form method="POST" enctype="multipart/form-data" source="custom" style="padding: 10px;" action="/Home/OpisMember">
                                        <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
 
@@ -78,16 +77,42 @@
 
                                       <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"></form>
                                     </div>
-      
+                                </div>
 
-            
+
+                                <div class="u-container-layout u-container-layout-3">
+                                    <div class="u-form u-form-3">
+                                        <!-- Добавление темы -->
+                                      <form method="post" style="padding: 10px;" asp-controller="Home" asp-action="CreateUser">
+                                       <input type="hidden" value="@Model.ID" required="" asp-for="createTheme.IdTest"  >
+
+                                          <div class="u-form-group u-form-message">
+                                          <label for="message-36ae" class="u-label">Название темы</label>
+                                          <input asp-for="createTheme.Name"  type="text" placeholder="Введите название темы" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required=""  value="">
+                                        </div>
+                                         <div class="u-align-left u-form-group u-form-submit">
+                                          <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
+                                          <input type="submit" value="submit" class="u-form-control-hidden">
+                                        </div>
+                                       
+
+                                      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"></form>
+                                    </div>
+                                </div>
+           </div>
+          </div>
+          <div class="u-container-layout u-container-layout-3">
+                                  
+          </div>
+            <form method="post" asp-controller="Home" asp-action="PassingSet">
               <input type="hidden" asp-for="ID" value="@Model.ID">
 
                     @for (int i = 0; i < Model.passingThemes.Count(); i++)
                     {
+                        <a href="@Url.Action("DeleteTheme","Home", new{IdTest=Model.ID,IdTheme=Model.passingThemes[i].ID })" class="submit-btn">Удалить тему</a>
                         <h2 style="text-align:center">@Model.passingThemes[i].Name</h2>
 
-                        <input type="hidden" asp-for="passingThemes[i].ID"    value="@Model.passingThemes[i].ID">
+                        <input type="hidden" asp-for="passingThemes[i].ID" value="@Model.passingThemes[i].ID">
                         //Передача id темы
 
                         for (int iS = 0; iS < Model.passingThemes[i].testSortsList.Count(); iS++)
@@ -100,13 +125,10 @@
                                 if (Close != null)
                                 {
                                     item = Model.passingThemes[i].ClosePassingsList.IndexOf(Close);
-
                                     <div class="col-lg-12" style="text-align: left;">
-                                    <a href="/home/DeleteVopr?IdQuews=793&amp;IDTestSistem=69" class="submit-btn">Удалить вопрос</a><br>
-                                    <a href="/home/EditQuestion/793?Type=CloseTest&amp;IdTest=69" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
-
-                                    </div>
-
+                                        <a href="/home/DeleteVopr?IdQuews=762&amp;IDTestSistem=67" class="submit-btn">Удалить вопрос</a><br>
+                                        <a href="/home/EditQuestion/762?Type=CloseTest&amp;IdTest=67" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
+                                        </div>
                                     <p class="u-form-group u-form-text u-text u-text-2" style="color: #8b680c;">@Model.passingThemes[i].ClosePassingsList[item].Name<br> </p>
                                     <input type="hidden" asp-for="passingThemes[i].ClosePassingsList[item].Id"    value="@Model.passingThemes[i].ClosePassingsList[item].Id">
                                     //Передача id
@@ -144,15 +166,15 @@
                                 break;
 
                             case "OpenTest":
-                            <div class="col-lg-12" style="text-align: left;">
-                                    <a href="/home/DeleteVopr?IdQuews=793&amp;IDTestSistem=69" class="submit-btn">Удалить вопрос</a><br>
-                                    <a href="/home/EditQuestion/793?Type=CloseTest&amp;IdTest=69" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
 
-                                </div>
                                 var Open = Model.passingThemes[i].openPassingsList.Where(x => x.ID == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
                                 if (Open != null)
                                 {
                                     item = Model.passingThemes[i].openPassingsList.IndexOf(Open);
+                                    <div class="col-lg-12" style="text-align: left;">
+                                        <a href="/home/DeleteVopr?IdQuews=762&amp;IDTestSistem=67" class="submit-btn">Удалить вопрос</a><br>
+                                        <a href="/home/EditQuestion/762?Type=CloseTest&amp;IdTest=67" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
+                                        </div>
                                     <p class="u-form-group u-form-text u-text u-text-1" style="color: #8b680c;">@Model.passingThemes[i].openPassingsList[item].Name</p>
 
                                     <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"    value="@Model.passingThemes[i].openPassingsList[item].ID">
@@ -168,13 +190,10 @@
                                     var Table = Model.passingThemes[i].TablePassings.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
                                     item = Model.passingThemes[i].TablePassings.IndexOf(Table);
                                     if (Table!=null)
-                                    {
-                                        <div class="col-lg-12" style="text-align: left;">
-                                        <a href="/home/DeleteVopr?IdQuews=793&amp;IDTestSistem=69" class="submit-btn">Удалить вопрос</a><br>
-                                        <a href="/home/EditQuestion/793?Type=CloseTest&amp;IdTest=69" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
-
+                                    {   <div class="col-lg-12" style="text-align: left;">
+                                        <a href="/home/DeleteVopr?IdQuews=762&amp;IDTestSistem=67" class="submit-btn">Удалить вопрос</a><br>
+                                        <a href="/home/EditQuestion/762?Type=CloseTest&amp;IdTest=67" style="margin-right: 20px" class="submit-btn">Редактировать вопрос</a>
                                         </div>
-
                                         <div class="u-expanded-width u-table u-table-responsive u-table-1">
                                             <h3 style="text-align:center">@Table.Name</h3>
 
@@ -261,122 +280,122 @@
 
 
                         }
+                       
+                    }
                     
-                                <div class="u-tab-links-align-center u-tabs u-tabs-1">
-                                  <ul class="u-tab-list u-unstyled" role="tablist">
-                                    <li class="u-tab-item" role="presentation">
-                                      <a class="active u-button-style u-tab-link" id="link-tab-b528" href="#tab-b528" role="tab" aria-controls="tab-b528" aria-selected="true">Открытый вопрос</a>
-                                    </li>
-                                    <li class="u-tab-item" role="presentation">
-                                      <a class="u-button-style u-tab-link" id="link-tab-6c10" href="#tab-6c10" role="tab" aria-controls="tab-6c10" aria-selected="false">Таблица</a>
-                                    </li>
-                                    <li class="u-tab-item" role="presentation">
-                                      <a class="u-button-style u-tab-link" id="link-tab-dbe0" href="#tab-dbe0" role="tab" aria-controls="tab-dbe0" aria-selected="false">Вопрос с ответами</a>
-                                    </li>
-                                  </ul>
-                                  <div class="u-tab-content">
-                                    <div class="u-container-style u-tab-active u-tab-pane" id="tab-b528" role="tabpanel" aria-labelledby="link-tab-b528">
-                                      <div class="u-container-layout u-container-layout-1">
-                                        <div class="u-form u-form-1">
-                                            <!-- Добавление открытого вопроса -->
-                                          <form method="post" style="padding: 10px;" action="/Home/CreateOpen">
-                                           <input type="hidden" value="69" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
-                                            <input type="hidden" value="286" required="" id="idTheme" name="idTheme">
+                         <div class="u-tab-links-align-center u-tabs u-tabs-1">
+                              <ul class="u-tab-list u-unstyled" role="tablist">
+                                <li class="u-tab-item" role="presentation">
+                                  <a class="active u-button-style u-tab-link" id="link-tab-b528" href="#tab-b528" role="tab" aria-controls="tab-b528" aria-selected="true">Открытый вопрос</a>
+                                </li>
+                                <li class="u-tab-item" role="presentation">
+                                  <a class="u-button-style u-tab-link" id="link-tab-6c10" href="#tab-6c10" role="tab" aria-controls="tab-6c10" aria-selected="false">Таблица</a>
+                                </li>
+                                <li class="u-tab-item" role="presentation">
+                                  <a class="u-button-style u-tab-link" id="link-tab-dbe0" href="#tab-dbe0" role="tab" aria-controls="tab-dbe0" aria-selected="false">Вопрос с ответами</a>
+                                </li>
+                              </ul>
+                              <div class="u-tab-content">
+                                <div class="u-container-style u-tab-active u-tab-pane" id="tab-b528" role="tabpanel" aria-labelledby="link-tab-b528">
+                                  <div class="u-container-layout u-container-layout-1">
+                                    <div class="u-form u-form-1">
+                                        <!-- Добавление открытого вопроса -->
+                                      <form method="post" style="padding: 10px;" action="/Home/CreateOpen">
+                                       <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
+                                        <input type="hidden" value="274" required="" id="idTheme" name="idTheme">
 
-                                              <div class="u-form-group u-form-message">
-                                              <label for="message-36ae" class="u-label">Текст вопроса</label>
-                                              <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TextOpenTest" name="TextOpenTest"></textarea>
-                                            </div>
-                                            <div class="u-form-checkbox u-form-group u-form-group-2">
-                                              <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
-                                              <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
-                                            </div>
-                                            <div class="u-align-left u-form-group u-form-submit">
-                                              <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
-                                              <input type="submit" value="submit" class="u-form-control-hidden">
-                                            </div>
-
-                                          <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6GdRLeC9pU5Gl9YSZGORghB9yMh-cgVD_jv6bBOx2NjVHhgUCMXZlOwomMFcvLqx1SpOFOhYeXoZ6R6KTBfQbx0b4N8yGrGgZHzFtmoj1RH_mmOPR_RdR_uReCObMhcPxU"><input name="IsRec" type="hidden" value="false"></form>
+                                          <div class="u-form-group u-form-message">
+                                          <label for="message-36ae" class="u-label">Текст вопроса</label>
+                                          <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TextOpenTest" name="TextOpenTest"></textarea>
                                         </div>
-                                      </div>
-                                    </div>
-                                    <div class="u-container-style u-tab-pane" id="tab-6c10" role="tabpanel" aria-labelledby="link-tab-6c10">
-                                      <div class="u-container-layout u-container-layout-2">
-                                        <div class="u-form u-form-2">
-
-                                            <!-- Добавление таблицы -->
-                                          <form method="post" style="padding: 10px;" action="/Home/CreateTable">
-                                           <input type="hidden" value="69" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
-                                            <input type="hidden" value="286" required="" id="idTheme" name="idTheme">
-
-                                              <div class="u-form-group u-form-message">
-                                                <label for="message-63ce" class="u-label">Название таблицы</label>
-                                              <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TableName" name="TableName"></textarea>
-                                              </div>
-                                              <div class="u-form-group u-form-message">
-                                              <label for="message-63ce" class="u-label">Описание первой ячейки</label>
-                                              <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TableDes" name="TableDes"></textarea>
-                                            </div>
-                                            <div class="u-form-group u-form-message">
-                                              <label for="message-63ce" class="u-label">Темы</label>
-                                              <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="Themes" name="Themes"></textarea>
-                                            </div>
-                                            <div class="u-form-group u-form-textarea u-form-group-5">
-                                              <label for="textarea-ed30" class="u-label">Вопросы</label>
-                                              <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="Q" name="Q"></textarea>
-                                            </div>
-                                            <div class="u-form-checkbox u-form-group u-form-group-2">
-                                              <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
-                                              <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
-                                            </div>
-                                            <div class="u-align-left u-form-group u-form-submit">
-                                              <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
-                                              <input type="submit" value="submit" class="u-form-control-hidden">
-                                            </div>
-                                          <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6GdRLeC9pU5Gl9YSZGORghB9yMh-cgVD_jv6bBOx2NjVHhgUCMXZlOwomMFcvLqx1SpOFOhYeXoZ6R6KTBfQbx0b4N8yGrGgZHzFtmoj1RH_mmOPR_RdR_uReCObMhcPxU"><input name="IsRec" type="hidden" value="false"></form>
+                                        <div class="u-form-checkbox u-form-group u-form-group-2">
+                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
+                                          <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
                                         </div>
-                                      </div>
-                                  </div>
-                                    <div class="u-container-style u-tab-pane" id="tab-dbe0" role="tabpanel" aria-labelledby="link-tab-dbe0">
-                                      <div class="u-container-layout u-container-layout-3">
-                                        <div class="u-form u-form-3">
-                                            <!-- Добавление вопроса с ответами -->
-                                          <form method="post" style="padding: 10px;" action="/Home/CreateVopr">
-                                           <input type="hidden" value="69" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
-                                            <input type="hidden" value="286" required="" id="idTheme" name="idTheme">
-
-                                              <div class="u-form-group u-form-message">
-                                              <label for="message-36ae" class="u-label">Текст вопроса</label>
-                                              <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TextOtvTest" name="TextOtvTest"></textarea>
-                                            </div>
-                                            <div class="u-form-group u-form-textarea u-form-group-5">
-                                              <label for="textarea-ed30" class="u-label">Ответы</label>
-                                              <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="Q" name="Q"></textarea>
-                                            </div>
-                                             <div class="u-form-checkbox u-form-group u-form-group-2">
-                                              <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
-                                              <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
-                                            </div>
-                                            <p class="news__item-date" style="text-align: left;">*При пустом поле "Ответы" автоматически присваиваются варианты ответов от 1 до 5*</p>
-                                            <p class="news__item-date" style="text-align: left;">*Каждая новая строка в поле ответ соответсвует варианту ответа по возрастанию от 1*</p>
-                                            <div class="u-align-left u-form-group u-form-submit">
-                                              <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
-                                              <input type="submit" value="submit" class="u-form-control-hidden">
-                                            </div>
-
-                                          <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6GdRLeC9pU5Gl9YSZGORghB9yMh-cgVD_jv6bBOx2NjVHhgUCMXZlOwomMFcvLqx1SpOFOhYeXoZ6R6KTBfQbx0b4N8yGrGgZHzFtmoj1RH_mmOPR_RdR_uReCObMhcPxU"><input name="IsRec" type="hidden" value="false"></form>
+                                        <div class="u-align-left u-form-group u-form-submit">
+                                          <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
+                                          <input type="submit" value="submit" class="u-form-control-hidden">
                                         </div>
-                                      </div>
+
+                                      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"><input name="IsRec" type="hidden" value="false"></form>
                                     </div>
                                   </div>
                                 </div>
-                    
-                    }
-                    }
+                                <div class="u-container-style u-tab-pane" id="tab-6c10" role="tabpanel" aria-labelledby="link-tab-6c10">
+                                  <div class="u-container-layout u-container-layout-2">
+                                    <div class="u-form u-form-2">
+
+                                        <!-- Добавление таблицы -->
+                                      <form method="post" style="padding: 10px;" action="/Home/CreateTable">
+                                       <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
+                                        <input type="hidden" value="274" required="" id="idTheme" name="idTheme">
+
+                                          <div class="u-form-group u-form-message">
+                                            <label for="message-63ce" class="u-label">Название таблицы</label>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TableName" name="TableName"></textarea>
+                                          </div>
+                                          <div class="u-form-group u-form-message">
+                                          <label for="message-63ce" class="u-label">Описание первой ячейки</label>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TableDes" name="TableDes"></textarea>
+                                        </div>
+                                        <div class="u-form-group u-form-message">
+                                          <label for="message-63ce" class="u-label">Темы</label>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="Themes" name="Themes"></textarea>
+                                        </div>
+                                        <div class="u-form-group u-form-textarea u-form-group-5">
+                                          <label for="textarea-ed30" class="u-label">Вопросы</label>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="Q" name="Q"></textarea>
+                                        </div>
+                                        <div class="u-form-checkbox u-form-group u-form-group-2">
+                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
+                                          <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
+                                        </div>
+                                        <div class="u-align-left u-form-group u-form-submit">
+                                          <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
+                                          <input type="submit" value="submit" class="u-form-control-hidden">
+                                        </div>
+                                      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"><input name="IsRec" type="hidden" value="false"></form>
+                                    </div>
+                                  </div>
+                              </div>
+                                <div class="u-container-style u-tab-pane" id="tab-dbe0" role="tabpanel" aria-labelledby="link-tab-dbe0">
+                                  <div class="u-container-layout u-container-layout-3">
+                                    <div class="u-form u-form-3">
+                                        <!-- Добавление вопроса с ответами -->
+                                      <form method="post" style="padding: 10px;" action="/Home/CreateVopr">
+                                       <input type="hidden" value="67" required="" data-val="true" data-val-required="The IDTestSistem field is required." id="IDTestSistem" name="IDTestSistem">
+                                        <input type="hidden" value="274" required="" id="idTheme" name="idTheme">
+
+                                          <div class="u-form-group u-form-message">
+                                          <label for="message-36ae" class="u-label">Текст вопроса</label>
+                                          <textarea placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="TextOtvTest" name="TextOtvTest"></textarea>
+                                        </div>
+                                        <div class="u-form-group u-form-textarea u-form-group-5">
+                                          <label for="textarea-ed30" class="u-label">Ответы</label>
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="Q" name="Q"></textarea>
+                                        </div>
+                                         <div class="u-form-checkbox u-form-group u-form-group-2">
+                                          <input type="checkbox" data-val="true" data-val-required="The IsRec field is required." id="IsRec" name="IsRec" value="true">
+                                          <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
+                                        </div>
+                                        <p class="news__item-date" style="text-align: left;">*При пустом поле "Ответы" автоматически присваиваются варианты ответов от 1 до 5*</p>
+                                        <p class="news__item-date" style="text-align: left;">*Каждая новая строка в поле ответ соответсвует варианту ответа по возрастанию от 1*</p>
+                                        <div class="u-align-left u-form-group u-form-submit">
+                                          <a href="#" class="u-btn u-btn-submit u-button-style">Добавить</a>
+                                          <input type="submit" value="submit" class="u-form-control-hidden">
+                                        </div>
+
+                                      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8G-AlVTiSBlEhJaAdIc9d6F-hdUbAOgqlwbTOfNs38CFGZax3I_5aflWBqqzDrcwQ3SPMIHV3g0Xfyh7C2ZZi9mzqTc_AfX4eXMu4gpTOw3JL0tpcfHQ_KsBLtTQ10eWEvkZQP6Lt1V6rfBWHakgLX0"><input name="IsRec" type="hidden" value="false"></form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                }
             <div class="col-lg-12">
-            
+            <button class="u-btn u-btn-submit u-button-style">Отправить ответы</button>
             </div>
-  
+    </form>
     </div>
     </section>
   
@@ -385,3 +404,4 @@
 
   
 </body></html>
+ 

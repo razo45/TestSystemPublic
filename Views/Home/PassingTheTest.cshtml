@@ -37,13 +37,17 @@
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
           <div class="">
            <div class="u-container-layout u-container-layout-12">
-               @if (Model.url!=null)
+               @if (Model.url!=null && Model.bytes!=null)
                {
                  <a href="@Model.url"><img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))"  ></a>     
                }
                else
                {
-                 <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))" >
+                    if ( Model.bytes!=null)
+                   {
+                    <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))" >
+
+                   }
                }
                <h2 style="text-align:center">@Model.Opisanie</h2>  
            </div>
@@ -75,7 +79,7 @@
                                     <input type="hidden" asp-for="passingThemes[i].ClosePassingsList[item].Id"    value="@Model.passingThemes[i].ClosePassingsList[item].Id">
                                     //Передача id
 
-
+                                    
                                     <div class="u-form-radio-button-wrapper" style="margin-bottom: 20px;text-align: left;">
 
                                         @for (int ItemAnswer = 0; ItemAnswer < Model.passingThemes[i].ClosePassingsList[item].answerTs.Count(); ItemAnswer++)
@@ -113,6 +117,7 @@
                                 if (Open != null)
                                 {
                                     item = Model.passingThemes[i].openPassingsList.IndexOf(Open);
+                                   
                                     <p class="u-form-group u-form-text u-text u-text-1" style="color: #8b680c;">@Model.passingThemes[i].openPassingsList[item].Name</p>
 
                                     <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"    value="@Model.passingThemes[i].openPassingsList[item].ID">
@@ -129,6 +134,7 @@
                                     item = Model.passingThemes[i].TablePassings.IndexOf(Table);
                                     if (Table!=null)
                                     {
+                                        
                                         <div class="u-expanded-width u-table u-table-responsive u-table-1">
                                             <h3 style="text-align:center">@Table.Name</h3>
 

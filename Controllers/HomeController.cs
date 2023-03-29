@@ -30,6 +30,7 @@ namespace MpdaTest.Controllers
         #region Методы администратора
 
         //Отображение панели администратора ✔
+        //Добавить проверку на админа
         public IActionResult AdminPanel()
         {
             BD = new Model1();
@@ -53,6 +54,7 @@ namespace MpdaTest.Controllers
         }
 
         //Добавление нового теста ✔
+        //Добавить проверку на админа
         public IActionResult AddNewTest(AdminViewModel model)
         {
             TestSistem testSistem = new TestSistem() { Name = model.NewTestModel.Name, DateOpen = model.NewTestModel.DateOpen.ToShortDateString(), DateClose = model.NewTestModel.DateClose.ToShortDateString() };
@@ -63,6 +65,7 @@ namespace MpdaTest.Controllers
         }
 
         //Копирование теста ✔
+        //Добавить проверку на админа
         public async Task<IActionResult> CopyTest(AdminViewModel model)
         {
 
@@ -194,6 +197,7 @@ namespace MpdaTest.Controllers
         }
 
         //Удаление теста ✔
+        //Добавить проверку на админа
         public async Task<IActionResult> DeleteTest(int IDTestSistem)
         {
 
@@ -255,6 +259,8 @@ namespace MpdaTest.Controllers
                 {
                     BD.TestSort.Remove(itemSort);
                 }
+
+                BD.ThemeTest.Remove(item);
             }
 
             BD.TestSistem.Remove(await BD.TestSistem.Where(x => x.ID == IDTestSistem).FirstOrDefaultAsync());
@@ -263,6 +269,7 @@ namespace MpdaTest.Controllers
         }
 
         //Добавление пользователей ✔
+        //Добавить проверку на админа
         public IActionResult CreateUser(AdminViewModel model)
         {
             int num = this.BD.UserSelectTest.Count();
@@ -294,6 +301,75 @@ namespace MpdaTest.Controllers
         #endregion
 
 
+        public async Task<IActionResult> DeleteTheme(int IdTheme, int IdTest)
+        {
+
+               
+
+                //Удаление открытого вопроса
+                foreach (var itemOpen in await BD.TestOpen.Where(x => x.IDTheme == IdTheme).ToListAsync())
+                {
+                    foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
+                    {
+                        BD.AnswerOpenTest.Remove(itemOpenAnswer);
+                    }
+                    BD.TestOpen.Remove(itemOpen);
+                }
+
+                //Удаление вопроса с выбором ответа
+                foreach (var itemAnswer in await BD.TestAnswer.Where(x => x.IDTheme == IdTheme).ToListAsync())
+                {
+                    foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
+                    {
+                        BD.AnswerT.Remove(itemAnswerT);
+                    }
+                    BD.TestAnswer.Remove(itemAnswer);
+                }
+
+                //удаление табличного вопроса
+                foreach (var itemTable in await BD.TableTest.Where(x => x.IDTheme == IdTheme).ToListAsync())
+                {
+                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
+                        {
+                            BD.AnswerTheme.Remove(itemAnswerTheme);
+                        }
+                        BD.Theme.Remove(itemTheme);
+                    }
+                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        BD.question.Remove(itemQuestion);
+                    }
+                    BD.TableTest.Remove(itemTable);
+                }
+
+                //Удаление Сортировочного листа
+                foreach (var itemSort in await BD.TestSort.Where(x => x.IDtheme == IdTheme).ToListAsync())
+                {
+                    BD.TestSort.Remove(itemSort);
+                }
+
+
+            BD.ThemeTest.Remove( await BD.ThemeTest.Where(x=>x.ID== IdTheme).FirstOrDefaultAsync());
+            await BD.SaveChangesAsync();
+
+            return RedirectToAction("ChangingTest", "Home", new {IdTest= IdTest});
+        }
+
+        public async Task<IActionResult> CreateTheme(PassingTestModel model)
+        {
+            ThemeTest NewTheme = new ThemeTest()
+            {
+                IDTestSistem = model.createTheme.IdTest,
+                Name = model.createTheme.Name
+            };
+            BD.ThemeTest.Add(NewTheme);
+            await BD.SaveChangesAsync();
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createTheme.IdTest });
+        }
+        //Отображение редактирования теста ✔
+        //Добавить проверку на админа
         public IActionResult ChangingTest(int IdTest)
         {
 
@@ -304,6 +380,7 @@ namespace MpdaTest.Controllers
             var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == IdTest).FirstOrDefault();
             var Test = BD.TestSistem.Where(x => x.ID == IdTest).FirstOrDefault();
             PassingTestModel passingTest = new PassingTestModel();
+            passingTest.createTheme = new CreateTheme();
             if (TestOpis != null) passingTest.Opisanie = TestOpis.Opis;
             passingTest.passingThemes = new List<PassingThemeModel>();
             passingTest.Name = Test.Name;
@@ -370,11 +447,6 @@ namespace MpdaTest.Controllers
                             else
                             {
                                 BD.TestSort.Remove(itemSort);
-
-
-
-
-
                             }
 
                             break;
@@ -417,6 +489,7 @@ namespace MpdaTest.Controllers
                             break;
 
                     }
+                    
                 }
                 BD.SaveChangesAsync();
                 passingTest.passingThemes.Add(passingThemeModel);
@@ -548,12 +621,12 @@ namespace MpdaTest.Controllers
                 var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == User.TestID).FirstOrDefault();
                 var Test = BD.TestSistem.Where(x => x.ID == User.TestID).FirstOrDefault();
                 PassingTestModel passingTest = new PassingTestModel();
-                passingTest.Opisanie = TestOpis.Opis;
+                if (TestOpis != null) passingTest.Opisanie = TestOpis.Opis;
                 passingTest.passingThemes = new List<PassingThemeModel>();
                 passingTest.Name = Test.Name;
                 passingTest.ID = Test.ID;
-                passingTest.bytes = TestOpis.ImageBit;
-                passingTest.url = TestOpis.link;
+                if (TestOpis != null) passingTest.bytes = TestOpis.ImageBit;
+                if (TestOpis != null) passingTest.url = TestOpis.link;
 
 
 

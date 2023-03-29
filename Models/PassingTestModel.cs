@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MpdaTest.Models.PassingModels;
+using System.Collections.Generic;
 
 namespace MpdaTest.Models
 {
@@ -21,6 +22,7 @@ namespace MpdaTest.Models
 
         public string url { get; set; }
 
+        public CreateTheme createTheme { get; set; }
 
         public List<PassingThemeModel> passingThemes { get; set; }  
 
