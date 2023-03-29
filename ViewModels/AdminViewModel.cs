@@ -9,5 +9,6 @@ namespace MpdaTest.ViewModels
         public List<ListTestAdmin> listTests { get; set; }
         public NewTestModel NewTestModel { get; set; }
         public CopyingTestModel CopyingTestModel { get; set; }
+        public CreateUserModel CreateUserModel { get; set; }
     }
 }

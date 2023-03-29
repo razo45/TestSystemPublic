@@ -33,7 +33,7 @@
 
     <section class="u-align-center u-clearfix u-section-1" id="sec-e832">
          
-
+        <h2 style="text-align:center">@Model.Name</h2>
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
           <div class="">
            <div class="u-container-layout u-container-layout-12">
@@ -48,7 +48,9 @@
                <h2 style="text-align:center">@Model.Opisanie</h2>  
            </div>
           </div>
-
+          <div class="u-container-layout u-container-layout-3">
+                                  
+          </div>
             <form method="post" asp-controller="Home" asp-action="PassingSet">
               <input type="hidden" asp-for="ID" value="@Model.ID">
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using MpdaTest.BdModels;
 using MpdaTest.Models;
 using MpdaTest.Models.PassingModels;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MpdaTest.Controllers
@@ -66,7 +68,7 @@ namespace MpdaTest.Controllers
 
 
             //Копирование теста
-            var Test =  BD.TestSistem.Where(x => x.ID == model.CopyingTestModel.IdTest).FirstOrDefault();
+            var Test = BD.TestSistem.Where(x => x.ID == model.CopyingTestModel.IdTest).FirstOrDefault();
 
 
             if (Test != null)
@@ -115,7 +117,7 @@ namespace MpdaTest.Controllers
                                 {
                                     TestAnswer testAnswer = new TestAnswer() { IDTheme = themeTest.ID, necessarily = close.necessarily, Question = close.Question };
                                     BD.TestAnswer.Add(testAnswer);
-                                   await BD.SaveChangesAsync();
+                                    await BD.SaveChangesAsync();
 
                                     TestSort testSort = new TestSort() { IDques = testAnswer.ID, IDtheme = themeTest.ID, Number = itemSort.Number, Type = itemSort.Type };
                                     BD.TestSort.Add(testSort);
@@ -126,7 +128,7 @@ namespace MpdaTest.Controllers
                                         BD.AnswerT.Add(answerT);
 
                                     }
-                                   await BD.SaveChangesAsync();
+                                    await BD.SaveChangesAsync();
                                 }
 
                                 break;
@@ -191,14 +193,242 @@ namespace MpdaTest.Controllers
             return RedirectToAction("AdminPanel", "Home");
         }
 
-        public IActionResult CreateUser()
+        //Удаление теста ✔
+        public async Task<IActionResult> DeleteTest(int IDTestSistem)
         {
+
+            foreach (var itemUsers in await BD.UserSelectTest.Where(x => x.TestID == IDTestSistem).ToListAsync())
+            {
+                BD.UserSelectTest.Remove(itemUsers);
+            }
+
+            var Opis = await BD.OpisTheme.Where(x => x.IdTheme == IDTestSistem).FirstOrDefaultAsync();
+            if (Opis != null)
+            {
+                BD.OpisTheme.Remove(Opis);
+            }
+
+
+            foreach (var item in await BD.ThemeTest.Where(x => x.IDTestSistem == IDTestSistem).ToListAsync())
+            {
+
+                //Удаление открытого вопроса
+                foreach (var itemOpen in await BD.TestOpen.Where(x => x.IDTheme == item.ID).ToListAsync())
+                {
+                    foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
+                    {
+                        BD.AnswerOpenTest.Remove(itemOpenAnswer);
+                    }
+                    BD.TestOpen.Remove(itemOpen);
+                }
+
+                //Удаление вопроса с выбором ответа
+                foreach (var itemAnswer in await BD.TestAnswer.Where(x => x.IDTheme == item.ID).ToListAsync())
+                {
+                    foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
+                    {
+                        BD.AnswerT.Remove(itemAnswerT);
+                    }
+                    BD.TestAnswer.Remove(itemAnswer);
+                }
+
+                //удаление табличного вопроса
+                foreach (var itemTable in await BD.TableTest.Where(x => x.IDTheme == item.ID).ToListAsync())
+                {
+                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
+                        {
+                            BD.AnswerTheme.Remove(itemAnswerTheme);
+                        }
+                        BD.Theme.Remove(itemTheme);
+                    }
+                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        BD.question.Remove(itemQuestion);
+                    }
+                    BD.TableTest.Remove(itemTable);
+                }
+
+                //Удаление Сортировочного листа
+                foreach (var itemSort in await BD.TestSort.Where(x => x.IDtheme == item.ID).ToListAsync())
+                {
+                    BD.TestSort.Remove(itemSort);
+                }
+            }
+
+            BD.TestSistem.Remove(await BD.TestSistem.Where(x => x.ID == IDTestSistem).FirstOrDefaultAsync());
+            await BD.SaveChangesAsync();
             return RedirectToAction("AdminPanel", "Home");
+        }
+
+        //Добавление пользователей ✔
+        public IActionResult CreateUser(AdminViewModel model)
+        {
+            int num = this.BD.UserSelectTest.Count();
+            string s = string.Empty;
+            for (int index = 0; index < model.CreateUserModel.Count; ++index)
+            {
+                ++num;
+                UserSelectTest entity = new UserSelectTest();
+                entity.TestID = model.CreateUserModel.IdTest;
+                entity.Login = model.CreateUserModel.UserName + num.ToString();
+                entity.Password = this.GetPass();
+                entity.BoolPassed = false;
+                this.BD.UserSelectTest.Add(entity);
+                s = s + "\n\nЛогин: " + entity.Login + "\nПароль: " + entity.Password;
+            }
+            this.BD.SaveChanges();
+            Microsoft.Net.Http.Headers.ContentDispositionHeaderValue dispositionHeaderValue = new Microsoft.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+            {
+                FileNameStar = "Список пользователей.txt"
+            };
+            this.Response.Headers.Add(HeaderNames.ContentDisposition, dispositionHeaderValue.ToString());
+            return (IActionResult)this.File(Encoding.UTF8.GetBytes(s), "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+
+
 
         }
 
-
         #endregion
+
+
+        public IActionResult ChangingTest(int IdTest)
+        {
+
+
+
+
+
+            var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == IdTest).FirstOrDefault();
+            var Test = BD.TestSistem.Where(x => x.ID == IdTest).FirstOrDefault();
+            PassingTestModel passingTest = new PassingTestModel();
+            if (TestOpis != null) passingTest.Opisanie = TestOpis.Opis;
+            passingTest.passingThemes = new List<PassingThemeModel>();
+            passingTest.Name = Test.Name;
+            passingTest.ID = Test.ID;
+            if (TestOpis != null) passingTest.bytes = TestOpis.ImageBit;
+            if (TestOpis != null) passingTest.url = TestOpis.link;
+
+            List<PassingThemeModel> passingTheme = new List<PassingThemeModel>();
+
+
+            foreach (var itemTheme in BD.ThemeTest.Where(x => x.IDTestSistem == IdTest))
+            {
+                var Sort = from p in BD.TestSort.Where(x => x.IDtheme == itemTheme.ID).ToList()
+                           orderby p.Number ascending
+                           select p;
+
+                PassingThemeModel passingThemeModel = new PassingThemeModel();
+                passingThemeModel.Name = itemTheme.Name;
+                passingThemeModel.ID = itemTheme.ID;
+                passingThemeModel.testSortsList = Sort.ToList();
+                passingThemeModel.openPassingsList = new List<OpenPassing>();
+                passingThemeModel.ClosePassingsList = new List<ClosePassing>();
+                passingThemeModel.TablePassings = new List<TablePassing>();
+
+
+
+                foreach (var itemSort in Sort)
+                {
+                    switch (itemSort.Type)
+                    {
+                        case "CloseTest":
+
+                            var close = BD.TestAnswer.Where(x => x.ID == itemSort.IDques).FirstOrDefault();
+
+                            if (close != null)
+                            {
+                                ClosePassing closePassing = new ClosePassing();
+                                closePassing.Id = close.ID;
+                                closePassing.Name = close.Question;
+                                closePassing.answerTs = BD.AnswerT.Where(x => x.IDTestAnswer == close.ID).ToList();
+
+
+                                passingThemeModel.ClosePassingsList.Add(closePassing);
+                            }
+                            else
+                            {
+                                BD.TestSort.Remove(itemSort);
+
+                            }
+                            break;
+
+                        case "OpenTest":
+
+                            var Open = BD.TestOpen.Where(x => x.ID == itemSort.IDques).FirstOrDefault();
+                            if (Open != null)
+                            {
+                                OpenPassing openPassing = new OpenPassing();
+                                openPassing.Name = Open.Question;
+                                openPassing.Text = string.Empty;
+                                openPassing.ID = Open.ID;
+
+                                passingThemeModel.openPassingsList.Add(openPassing);
+                            }
+                            else
+                            {
+                                BD.TestSort.Remove(itemSort);
+
+
+
+
+
+                            }
+
+                            break;
+
+                        case "TableTest":
+                            var Table = BD.TableTest.Where(x => x.ID == itemSort.IDques).FirstOrDefault();
+
+                            if (Table != null)
+                            {
+                                TablePassing tablePassing = new TablePassing();
+                                tablePassing.Id = Table.ID;
+                                tablePassing.Opisanie = Table.Desp;
+                                tablePassing.Name = Table.Name;
+                                tablePassing.IsRec = Table.necessarily;
+                                tablePassing.TableThemes = new List<TableThemePassing>();
+
+                                foreach (var itemThemeTable in BD.Theme.Where(x => x.IDTable == Table.ID).ToList())
+                                {
+                                    TableThemePassing themePassing = new TableThemePassing();
+                                    themePassing.ID = itemThemeTable.ID;
+                                    themePassing.Name = itemThemeTable.Text;
+                                    themePassing.TableQues = new List<TableQuesPassing>();
+                                    foreach (var itemQuesTable in BD.question.Where(x => x.IDTable == Table.ID).ToList())
+                                    {
+                                        TableQuesPassing quesPassing = new TableQuesPassing();
+                                        quesPassing.ID = itemQuesTable.ID;
+                                        quesPassing.Name = itemQuesTable.Text;
+                                        themePassing.TableQues.Add(quesPassing);
+                                    }
+                                    tablePassing.TableThemes.Add(themePassing);
+
+                                }
+
+                                passingThemeModel.TablePassings.Add(tablePassing);
+                            }
+                            else
+                            {
+                                BD.TestSort.Remove(itemSort);
+                            }
+                            break;
+
+                    }
+                }
+                BD.SaveChangesAsync();
+                passingTest.passingThemes.Add(passingThemeModel);
+
+            }
+
+
+
+            return View(passingTest);
+
+        }
+
         //Проверка логина в Coockie ✔
         public string CoockiesChek()
         {
@@ -218,6 +448,20 @@ namespace MpdaTest.Controllers
             }
             return null;
 
+        }
+
+        //Генерация случайного пароля ✔
+        public string GetPass()
+        {
+            int[] numArray = new int[16];
+            Random random = new Random();
+            string pass = "";
+            for (int index = 0; index < numArray.Length; ++index)
+            {
+                numArray[index] = random.Next(33, 125);
+                pass += ((char)numArray[index]).ToString();
+            }
+            return pass;
         }
 
         //Отправка ответов на тест ✔
@@ -299,7 +543,7 @@ namespace MpdaTest.Controllers
             loginMain = CoockiesChek();
             if (loginMain != null)
             {
-                var User = BD.UserSelectTest.Where(x => x.Login.ToLower() == loginMain.ToLower()).FirstOrDefault();
+                var User = await BD.UserSelectTest.Where(x => x.Login.ToLower() == loginMain.ToLower()).FirstOrDefaultAsync();
 
                 var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == User.TestID).FirstOrDefault();
                 var Test = BD.TestSistem.Where(x => x.ID == User.TestID).FirstOrDefault();
@@ -512,11 +756,6 @@ namespace MpdaTest.Controllers
             GC.WaitForPendingFinalizers();
             Response.Cookies.Delete("Login");
             return RedirectToAction("Login", "Home");
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

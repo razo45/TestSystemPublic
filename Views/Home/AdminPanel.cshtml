@@ -79,11 +79,11 @@
                                 </td>
 
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">
-                                 <a href="/Home/CreateTest?idTest=60" class="genric-btn link">Изменить тест</a>
+                                 <a href="@Url.Action("ChangingTest","Home", new{IdTest=@item.ID})" class="genric-btn link">Изменить тест</a>
                                 </td>
 
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">
-                                 <a href="/Home/DeleteTest?IDTestSistem=60" class="genric-btn link">Удалить тест</a>
+                                 <a href="@Url.Action("DeleteTest","Home", new{IDTestSistem=@item.ID} )" class="genric-btn link">Удалить тест</a>
                                 </td>
 
                           
@@ -99,13 +99,13 @@
             </tbody>
           </table>
         </div>
-                        <form method="post" style="width: 100%;text-align: left;margin-bottom: 30px;" action="/Home/AdminPanel">
+                        <form method="post" style="width: 100%;text-align: left;margin-bottom: 30px;" asp-controller="Home" asp-action="CreateUser">
                             <h2 style="text-align: center;">Добавить пользователей для курса</h2>
                             <div style="Width:100%;padding-left: 0px;padding-right: 0px;margin-bottom: 10px;" class="col-lg-6 ">
                                 <span>Выберите курс</span><br/>
                                         <div class="select" style="width: auto;">
                                             
-                                            <select data-val="true" data-val-required="The idTest field is required." id="idTest" name="idTest">
+                                            <select asp-for="CreateUserModel.IdTest">
                                                 @foreach (var item in Model.listTests)
                                                 {
                                                     <option value="@item.ID">@item.Name</option>
@@ -117,9 +117,9 @@
                                         </div>
                                     </div>
                             <span>Введите кол-во пользователей</span><br/>
-                            <input type="number" style="margin-bottom: 10px" placeholder="Кол-во пользователей" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" data-val="true" data-val-required="The CountUser field is required." id="CountUser" name="CountUser" value="0" />
+                            <input type="number" asp-for="CreateUserModel.Count" style="margin-bottom: 10px" placeholder="Кол-во пользователей" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" value="0" />
                             <span>Введите имя пользователей </span><br/>
-                            <input type="text" placeholder="Название пользователей" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" id="usename" name="usename" value="" />
+                            <input type="text" placeholder="Название пользователей" asp-for="CreateUserModel.UserName" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required=""   value="" />
 
                              <div class="col-lg-12" style="padding-left: 0px;">
                             <button class="u-btn u-btn-submit u-button-style">Добавить пользователей</button>
