@@ -349,6 +349,9 @@ namespace MpdaTest.Controllers
             });
         }
 
+
+        //Удаление вопроса из темы ✔
+        //Добавить проверку на админа
         public async Task<IActionResult> DeleteQuestion(int IdTest, int IDques, string Type)
         {
             switch (Type)
@@ -403,7 +406,12 @@ namespace MpdaTest.Controllers
 
             }
 
-           await BD.SaveChangesAsync();
+
+
+
+
+            
+            await BD.SaveChangesAsync();
 
 
             return RedirectToAction("ChangingTest", "Home", new { IdTest = IdTest });
