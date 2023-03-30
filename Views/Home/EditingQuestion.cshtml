@@ -85,7 +85,7 @@
 
                                         @for (int i = 0; i < @Model.editingTableModel.QuesList.Count(); i++)
                                         {
-                                             <a href="" style="margin-right: 20px" class="submit-btn">Удалить Вопрос</a>
+                                             <a href="@Url.Action("DeleteQuesTable", "Home", new { IdTest= Model.IdTest,IdAnswer =Model.editingTableModel.QuesList[i].Key, IDques = Model.editingTableModel.Id, Type= Model.Type })" style="margin-right: 20px" class="submit-btn">Удалить Вопрос</a>
                                              <input placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" type="text" asp-for="editingTableModel.QuesList[i].Value" value="@Model.editingTableModel.QuesList[i].Value" />
                                              <input type="hidden" value="@Model.editingTableModel.QuesList[i].Key" required="" asp-for="editingTableModel.QuesList[i].Key"  />
                                         
@@ -97,10 +97,9 @@
                                          
                                          @for (int i = 0; i < Model.editingTableModel.AnswerList.Count(); i++)
                                          {
-                                             <a href="" style="margin-right: 20px" class="submit-btn">Удалить ответ</a>
+                                             <a href="@Url.Action("DeleteAnswerTable", "Home", new { IdTest= Model.IdTest,IdAnswer =Model.editingTableModel.AnswerList[i].Key, IDques = Model.editingTableModel.Id, Type= Model.Type })" style="margin-right: 20px" class="submit-btn">Удалить ответ</a>
                                              <input placeholder="Введите вопрос" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="" value="@Model.editingTableModel.AnswerList[i].Value" asp-for="editingTableModel.AnswerList[i].Value" type="text"  />
                                              <input type="hidden" value="@Model.editingTableModel.AnswerList[i].Key" asp-for="editingTableModel.AnswerList[i].Key" required=""  />
-
                                          }
                                          
                                          

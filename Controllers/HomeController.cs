@@ -691,14 +691,49 @@ namespace MpdaTest.Controllers
 
 
         #region Удаление вариантов ответов
-        public async Task<IActionResult> DeleteAnswerClose(int IdTest, int IDques, int IdAnswer , string Type)
+        public async Task<IActionResult> DeleteAnswerClose(int IdTest, int IDques, int IdAnswer, string Type)
         {
 
             BD.AnswerT.Remove(await BD.AnswerT.Where(x => x.ID == IdAnswer).FirstOrDefaultAsync());
             await BD.SaveChangesAsync();
             return RedirectToAction("EditingQuestion", "Home", new { IdTest= IdTest, IDques = IDques, Type= Type });
         }
+        
+        
+        //Редактирование таблицы из темы ✔
+        //Добавить проверку на админа
+        public async Task<IActionResult> DeleteAnswerTable(int IdTest, int IDques, int IdAnswer, string Type)
+        {
 
+            BD.Theme.Remove(await BD.Theme.Where(x => x.ID == IdAnswer).FirstOrDefaultAsync());
+
+            foreach (var item in await BD.AnswerTheme.Where(x=>x.IDTheme== IdAnswer).ToListAsync())
+            {
+                BD.AnswerTheme.Remove(item);
+            }
+            await BD.SaveChangesAsync();
+            return RedirectToAction("EditingQuestion", "Home", new { IdTest = IdTest, IDques = IDques, Type = Type });
+        }
+        
+        
+        //Редактирование таблицы из темы ✔
+        //Добавить проверку на админа
+        public async Task<IActionResult> DeleteQuesTable(int IdTest, int IDques, int IdAnswer, string Type)
+        {
+
+            BD.question.Remove(await BD.question.Where(x => x.ID == IdAnswer).FirstOrDefaultAsync());
+
+            foreach (var item in await BD.AnswerTheme.Where(x => x.IDQuestion == IdAnswer).ToListAsync())
+            {
+                BD.AnswerTheme.Remove(item);
+            }
+            await BD.SaveChangesAsync();
+            return RedirectToAction("EditingQuestion", "Home", new { IdTest = IdTest, IDques = IDques, Type = Type });
+        }
+       
+        
+        //Удлаение вопроса таблицы из темы ✔
+        //Добавить проверку на админа
         public async Task<IActionResult> EditingQuestionSet(EditingQuestionViewModel model)
         {
             switch (model.Type)
@@ -792,7 +827,7 @@ namespace MpdaTest.Controllers
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.IdTest});
         }
         #endregion
-        //Редактирование вопроса из темы ✔
+        //Редактирование таблицы из темы ✔
         //Добавить проверку на админа
         public async Task<IActionResult> EditingQuestion(int IdTest, int IDques, string Type)
         {
