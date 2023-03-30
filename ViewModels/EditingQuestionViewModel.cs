@@ -9,5 +9,6 @@ namespace MpdaTest.ViewModels
 
         public EditingOpenModel editingOpenModel { get; set; }
         public EditingCloseModel editingCloseModel { get; set; }
+        public EditingTableModel editingTableModel { get; set; }
     }
 }

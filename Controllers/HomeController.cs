@@ -841,13 +841,23 @@ namespace MpdaTest.Controllers
 
                 case "TableTest":
                     var itemTable = await BD.TableTest.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    viewModel.editingTableModel = new EditingTableModel();
+
+                    viewModel.editingTableModel.Id = itemTable.ID;
+                    viewModel.editingTableModel.Desc = itemTable.Desp;
+                    viewModel.editingTableModel.IsRec = itemTable.necessarily;
+                    viewModel.editingTableModel.Name = itemTable.Name;
+
+                    viewModel.editingTableModel.AnswerList = new List<KeyValuePair<int, string>>();
                     foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
                     {
-                        
+                        viewModel.editingTableModel.AnswerList.Add(new KeyValuePair<int, string>(itemTheme.ID, itemTheme.Text));
                     }
+
+                    viewModel.editingTableModel.QuesList = new List<KeyValuePair<int, string>>();
                     foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
                     {
-                        
+                        viewModel.editingTableModel.QuesList.Add(new KeyValuePair<int, string>(itemQuestion.ID, itemQuestion.Text));
                     }
                     
                     break;
