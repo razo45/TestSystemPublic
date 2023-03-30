@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using MpdaTest.BdModels;
 using MpdaTest.Models;
+using MpdaTest.Models.EditingModels;
 using MpdaTest.Models.PassingModels;
 using MpdaTest.ViewModels;
 using System;
@@ -28,7 +29,7 @@ namespace MpdaTest.Controllers
         {
 
         }
-        #region Методы администратора
+        #region Методы администратора ✔
 
         //Отображение панели администратора ✔
         //Добавить проверку на админа
@@ -301,11 +302,10 @@ namespace MpdaTest.Controllers
 
         #endregion
 
+        #region Создание и удаление элементов в редактировании теста ✔
 
         //Создание описания в редакторе тестов ✔
         //Добавить проверку на админа
-
-
         [HttpPost]
         public IActionResult OpisMember(PassingTestModel model)
         {
@@ -349,134 +349,6 @@ namespace MpdaTest.Controllers
             });
         }
 
-
-        //Удаление вопроса из темы ✔
-        //Добавить проверку на админа
-        public async Task<IActionResult> DeleteQuestion(int IdTest, int IDques, string Type)
-        {
-            switch (Type)
-            {
-                case "CloseTest":
-
-                    var itemAnswer = await BD.TestAnswer.Where(x => x.ID == IDques).FirstOrDefaultAsync();
-                    foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
-                    {
-                        BD.AnswerT.Remove(itemAnswerT);
-                    }
-                    BD.TestAnswer.Remove(itemAnswer);
-
-                  BD.TestSort.Remove( await BD.TestSort.Where(x=> x.IDques ==IDques && x.Type == Type).FirstOrDefaultAsync());
-                    break;
-
-                case "OpenTest":
-
-
-
-                    //Удаление открытого вопроса
-                    var itemOpen = await BD.TestOpen.Where(x => x.ID == IDques).FirstOrDefaultAsync();
-
-                    foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
-                    {
-                        BD.AnswerOpenTest.Remove(itemOpenAnswer);
-                    }
-                    BD.TestOpen.Remove(itemOpen);
-
-                    BD.TestSort.Remove(await BD.TestSort.Where(x => x.IDques == IDques && x.Type == Type).FirstOrDefaultAsync());
-
-                    break;
-
-                case "TableTest":
-                    var itemTable = await BD.TableTest.Where(x => x.ID == IDques).FirstOrDefaultAsync();
-                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
-                    {
-                        foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
-                        {
-                            BD.AnswerTheme.Remove(itemAnswerTheme);
-                        }
-                        BD.Theme.Remove(itemTheme);
-                    }
-                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
-                    {
-                        BD.question.Remove(itemQuestion);
-                    }
-                    BD.TableTest.Remove(itemTable);
-                    BD.TestSort.Remove(await BD.TestSort.Where(x => x.IDques == IDques && x.Type == Type).FirstOrDefaultAsync());
-
-                    break;
-
-            }
-
-
-
-
-
-            
-            await BD.SaveChangesAsync();
-
-
-            return RedirectToAction("ChangingTest", "Home", new { IdTest = IdTest });
-        }
-
-        //Удаление темы теста ✔
-        //Добавить проверку на админа
-        public async Task<IActionResult> DeleteTheme(int IdTheme, int IdTest)
-        {
-
-
-
-            //Удаление открытого вопроса
-            foreach (var itemOpen in await BD.TestOpen.Where(x => x.IDTheme == IdTheme).ToListAsync())
-            {
-                foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
-                {
-                    BD.AnswerOpenTest.Remove(itemOpenAnswer);
-                }
-                BD.TestOpen.Remove(itemOpen);
-            }
-
-            //Удаление вопроса с выбором ответа
-            foreach (var itemAnswer in await BD.TestAnswer.Where(x => x.IDTheme == IdTheme).ToListAsync())
-            {
-                foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
-                {
-                    BD.AnswerT.Remove(itemAnswerT);
-                }
-                BD.TestAnswer.Remove(itemAnswer);
-            }
-
-            //удаление табличного вопроса
-            foreach (var itemTable in await BD.TableTest.Where(x => x.IDTheme == IdTheme).ToListAsync())
-            {
-                foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
-                {
-                    foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
-                    {
-                        BD.AnswerTheme.Remove(itemAnswerTheme);
-                    }
-                    BD.Theme.Remove(itemTheme);
-                }
-                foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
-                {
-                    BD.question.Remove(itemQuestion);
-                }
-                BD.TableTest.Remove(itemTable);
-            }
-
-            //Удаление Сортировочного листа
-            foreach (var itemSort in await BD.TestSort.Where(x => x.IDtheme == IdTheme).ToListAsync())
-            {
-                BD.TestSort.Remove(itemSort);
-            }
-
-
-            BD.ThemeTest.Remove(await BD.ThemeTest.Where(x => x.ID == IdTheme).FirstOrDefaultAsync());
-            await BD.SaveChangesAsync();
-
-            return RedirectToAction("ChangingTest", "Home", new { IdTest = IdTest });
-        }
-
-
-        #region Создание элементов в редактировании теста
 
         //Создание темы в редакторе тестов ✔
         //Добавить проверку на админа
@@ -689,7 +561,309 @@ namespace MpdaTest.Controllers
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.createAnswer.IdTest });
         }
 
+
+        //Удаление вопроса из темы ✔
+        //Добавить проверку на админа
+        public async Task<IActionResult> DeleteQuestion(int IdTest, int IDques, string Type)
+        {
+            switch (Type)
+            {
+                case "CloseTest":
+
+                    var itemAnswer = await BD.TestAnswer.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
+                    {
+                        BD.AnswerT.Remove(itemAnswerT);
+                    }
+                    BD.TestAnswer.Remove(itemAnswer);
+
+                    BD.TestSort.Remove(await BD.TestSort.Where(x => x.IDques == IDques && x.Type == Type).FirstOrDefaultAsync());
+                    break;
+
+                case "OpenTest":
+
+
+
+                    //Удаление открытого вопроса
+                    var itemOpen = await BD.TestOpen.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+
+                    foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
+                    {
+                        BD.AnswerOpenTest.Remove(itemOpenAnswer);
+                    }
+                    BD.TestOpen.Remove(itemOpen);
+
+                    BD.TestSort.Remove(await BD.TestSort.Where(x => x.IDques == IDques && x.Type == Type).FirstOrDefaultAsync());
+
+                    break;
+
+                case "TableTest":
+                    var itemTable = await BD.TableTest.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
+                        {
+                            BD.AnswerTheme.Remove(itemAnswerTheme);
+                        }
+                        BD.Theme.Remove(itemTheme);
+                    }
+                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        BD.question.Remove(itemQuestion);
+                    }
+                    BD.TableTest.Remove(itemTable);
+                    BD.TestSort.Remove(await BD.TestSort.Where(x => x.IDques == IDques && x.Type == Type).FirstOrDefaultAsync());
+
+                    break;
+
+            }
+
+
+
+
+
+
+            await BD.SaveChangesAsync();
+
+
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = IdTest });
+        }
+
+        //Удаление темы теста ✔
+        //Добавить проверку на админа
+        public async Task<IActionResult> DeleteTheme(int IdTheme, int IdTest)
+        {
+
+
+
+            //Удаление открытого вопроса
+            foreach (var itemOpen in await BD.TestOpen.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            {
+                foreach (var itemOpenAnswer in await BD.AnswerOpenTest.Where(x => x.IDTestOpen == itemOpen.ID).ToListAsync())
+                {
+                    BD.AnswerOpenTest.Remove(itemOpenAnswer);
+                }
+                BD.TestOpen.Remove(itemOpen);
+            }
+
+            //Удаление вопроса с выбором ответа
+            foreach (var itemAnswer in await BD.TestAnswer.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            {
+                foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
+                {
+                    BD.AnswerT.Remove(itemAnswerT);
+                }
+                BD.TestAnswer.Remove(itemAnswer);
+            }
+
+            //удаление табличного вопроса
+            foreach (var itemTable in await BD.TableTest.Where(x => x.IDTheme == IdTheme).ToListAsync())
+            {
+                foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                {
+                    foreach (var itemAnswerTheme in await BD.AnswerTheme.Where(x => x.IDTheme == itemTheme.ID).ToListAsync())
+                    {
+                        BD.AnswerTheme.Remove(itemAnswerTheme);
+                    }
+                    BD.Theme.Remove(itemTheme);
+                }
+                foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                {
+                    BD.question.Remove(itemQuestion);
+                }
+                BD.TableTest.Remove(itemTable);
+            }
+
+            //Удаление Сортировочного листа
+            foreach (var itemSort in await BD.TestSort.Where(x => x.IDtheme == IdTheme).ToListAsync())
+            {
+                BD.TestSort.Remove(itemSort);
+            }
+
+
+            BD.ThemeTest.Remove(await BD.ThemeTest.Where(x => x.ID == IdTheme).FirstOrDefaultAsync());
+            await BD.SaveChangesAsync();
+
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = IdTest });
+        }
+
         #endregion
+
+
+        #region Удаление вариантов ответов
+        public async Task<IActionResult> DeleteAnswerClose(int IdTest, int IDques, int IdAnswer , string Type)
+        {
+
+            BD.AnswerT.Remove(await BD.AnswerT.Where(x => x.ID == IdAnswer).FirstOrDefaultAsync());
+            await BD.SaveChangesAsync();
+            return RedirectToAction("EditingQuestion", "Home", new { IdTest= IdTest, IDques = IDques, Type= Type });
+        }
+
+        public async Task<IActionResult> EditingQuestionSet(EditingQuestionViewModel model)
+        {
+            switch (model.Type)
+            {
+                case "CloseTest":
+
+                    var itemAnswer = await BD.TestAnswer.Where(x => x.ID == model.editingCloseModel.Id).FirstOrDefaultAsync();
+
+                    itemAnswer.Question = model.editingCloseModel.Name;
+                    itemAnswer.necessarily = model.editingCloseModel.IsRec;
+
+                    if (model.editingCloseModel.AnsweT !=null)
+                    {
+                        foreach (var item in model.editingCloseModel.AnsweT)
+                        {
+                            var Ans =  await BD.AnswerT.Where(x => x.ID == item.Key).FirstOrDefaultAsync();
+                            if (item.Value!=null)
+                            {
+                                Ans.TextUser = item.Value;
+                            }
+
+                            
+                            
+                        }
+
+                        if (model.editingCloseModel.NewQues != null)
+                        {
+                            string[] source = model.editingCloseModel.NewQues.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                            for (int index = 1; index <= source.Count(); ++index)
+                                this.BD.AnswerT.Add(new AnswerT()
+                                {
+                                    Correct = model.editingCloseModel.IsRec,
+                                    IDTestAnswer = model.editingCloseModel.Id,
+                                    NumberOfSelected = 0,
+                                    TextUser = source[index - 1],
+                                    Text = index.ToString()
+                                });
+                        }
+                    }
+                    else
+                    {
+
+                        if (model.editingCloseModel.NewQues== null)
+                        {
+
+                            for (int index = 1; index <= 5; ++index)
+                                this.BD.AnswerT.Add(new AnswerT()
+                                {
+                                    Correct = model.editingCloseModel.IsRec,
+                                    IDTestAnswer = model.editingCloseModel.Id,
+                                    NumberOfSelected = 0,
+                                    Text = index.ToString()
+                                });
+                        }
+                        else
+                        {
+                            string[] source = model.editingCloseModel.NewQues.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                            for (int index = 1; index <= source.Count(); ++index)
+                                this.BD.AnswerT.Add(new AnswerT()
+                                {
+                                    Correct = model.editingCloseModel.IsRec,
+                                    IDTestAnswer = model.editingCloseModel.Id,
+                                    NumberOfSelected = 0,
+                                    TextUser = source[index-1],
+                                    Text = index.ToString()
+                                });
+
+                        }
+                    }
+
+
+                    break;
+
+                case "OpenTest":
+                    var itemOpen = await BD.TestOpen.Where(x => x.ID == model.editingOpenModel.Id).FirstOrDefaultAsync();
+
+
+                    itemOpen.Question = model.editingOpenModel.Name;
+                    itemOpen.necessarily = model.editingOpenModel.IsRec;
+
+                    break;
+
+                case "TableTest":
+                    
+
+                    break;
+
+            }
+            await BD.SaveChangesAsync();
+
+            return RedirectToAction("ChangingTest", "Home", new { IdTest = model.IdTest});
+        }
+        #endregion
+        //Редактирование вопроса из темы ✔
+        //Добавить проверку на админа
+        public async Task<IActionResult> EditingQuestion(int IdTest, int IDques, string Type)
+        {
+            EditingQuestionViewModel viewModel = new EditingQuestionViewModel();
+            viewModel.Type = Type;
+            viewModel.IdTest = IdTest;
+            switch (Type)
+            {
+                case "CloseTest":
+                    
+                    var itemAnswer = await BD.TestAnswer.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    viewModel.editingCloseModel = new EditingCloseModel() { Id= itemAnswer.ID, IsRec= itemAnswer.necessarily, Name = itemAnswer.Question };
+                    viewModel.editingCloseModel.AnsweT = new List<KeyValuePair<int, string>>();
+                    viewModel.editingOpenModel = new EditingOpenModel();
+
+
+                    foreach (var itemAnswerT in await BD.AnswerT.Where(x => x.IDTestAnswer == itemAnswer.ID).ToListAsync())
+                    {
+                        if (itemAnswerT.TextUser ==null)
+                        {
+                            viewModel.editingCloseModel.AnsweT.Add(new KeyValuePair<int, string>(itemAnswerT.ID, itemAnswerT.Text));
+
+                        }
+                        else
+                        {
+                            viewModel.editingCloseModel.AnsweT.Add(new KeyValuePair<int, string>(itemAnswerT.ID, itemAnswerT.TextUser));
+
+                        }
+                    }
+
+                    break;
+
+                case "OpenTest":
+
+
+
+                    //Удаление открытого вопроса
+                    var itemOpen = await BD.TestOpen.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    viewModel.editingOpenModel = new EditingOpenModel();
+                    viewModel.editingOpenModel.Id = itemOpen.ID;
+                    viewModel.editingOpenModel.Name = itemOpen.Question;
+                    viewModel.editingOpenModel.IsRec = itemOpen.necessarily;
+
+
+                    break;
+
+                case "TableTest":
+                    var itemTable = await BD.TableTest.Where(x => x.ID == IDques).FirstOrDefaultAsync();
+                    foreach (var itemTheme in await BD.Theme.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        
+                    }
+                    foreach (var itemQuestion in await BD.question.Where(x => x.IDTable == itemTable.ID).ToListAsync())
+                    {
+                        
+                    }
+                    
+                    break;
+
+            }
+
+
+
+
+
+
+            await BD.SaveChangesAsync();
+
+
+            return View(viewModel);
+        }
 
 
         //Отображение редактирования теста ✔
@@ -747,6 +921,7 @@ namespace MpdaTest.Controllers
                             {
                                 ClosePassing closePassing = new ClosePassing();
                                 closePassing.Id = close.ID;
+                                closePassing.IsRec = close.necessarily;
                                 closePassing.Name = close.Question;
                                 closePassing.answerTs = BD.AnswerT.Where(x => x.IDTestAnswer == close.ID).ToList();
 
@@ -767,6 +942,7 @@ namespace MpdaTest.Controllers
                             {
                                 OpenPassing openPassing = new OpenPassing();
                                 openPassing.Name = Open.Question;
+                                openPassing.IsRec = Open.necessarily;
                                 openPassing.Text = string.Empty;
                                 openPassing.ID = Open.ID;
 
@@ -831,6 +1007,7 @@ namespace MpdaTest.Controllers
         }
 
 
+        #region Вспомогательные методы
         //Проверка логина в Coockie ✔
         public string CoockiesChek()
         {
@@ -868,6 +1045,9 @@ namespace MpdaTest.Controllers
         }
 
 
+        #endregion
+
+
         //Отправка ответов на тест ✔
         [HttpPost]
         public IActionResult PassingSet(PassingTestModel model)
@@ -898,8 +1078,12 @@ namespace MpdaTest.Controllers
                 {
                     foreach (var item2 in item.ClosePassingsList)
                     {
-                        var a = BD.AnswerT.Where(x => x.ID == item2.AnswerTSelect).FirstOrDefault();
-                        a.NumberOfSelected++;
+                        if (item2.Id!=0)
+                        {
+                            var a = BD.AnswerT.Where(x => x.ID == item2.AnswerTSelect).FirstOrDefault();
+                            a.NumberOfSelected++;
+                        }
+                        
 
                     }
                 }
@@ -994,6 +1178,7 @@ namespace MpdaTest.Controllers
                                 {
                                     ClosePassing closePassing = new ClosePassing();
                                     closePassing.Id = close.ID;
+                                    closePassing.IsRec = close.necessarily;
                                     closePassing.Name = close.Question;
                                     closePassing.answerTs = BD.AnswerT.Where(x => x.IDTestAnswer == close.ID).ToList();
 
@@ -1014,6 +1199,7 @@ namespace MpdaTest.Controllers
                                 {
                                     OpenPassing openPassing = new OpenPassing();
                                     openPassing.Name = Open.Question;
+                                    openPassing.IsRec = Open.necessarily;
                                     openPassing.Text = string.Empty;
                                     openPassing.ID = Open.ID;
 

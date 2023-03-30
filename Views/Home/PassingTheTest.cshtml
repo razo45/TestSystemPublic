@@ -82,6 +82,11 @@
                                     
                                     <div class="u-form-radio-button-wrapper" style="margin-bottom: 20px;text-align: left;">
 
+                                        @if (!Model.passingThemes[i].ClosePassingsList[item].IsRec)
+                                        {
+                                            <input type="radio" asp-for="@Model.passingThemes[i].ClosePassingsList[item].AnswerTSelect" value="0" checked="checked" >
+                                            <label class="u-label" for="radiobutton">Нет ответа</label>
+                                        }
                                         @for (int ItemAnswer = 0; ItemAnswer < Model.passingThemes[i].ClosePassingsList[item].answerTs.Count(); ItemAnswer++)
                                         {
                                             <div class="u-input-row">
@@ -120,7 +125,16 @@
                                    
                                     <p class="u-form-group u-form-text u-text u-text-1" style="color: #8b680c;">@Model.passingThemes[i].openPassingsList[item].Name</p>
 
-                                    <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"    value="@Model.passingThemes[i].openPassingsList[item].ID">
+                                    if (Model.passingThemes[i].openPassingsList[item].IsRec)
+                                    {
+                                     <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"  required  value="@Model.passingThemes[i].openPassingsList[item].ID">
+
+                                    }
+                                    else
+                                    {
+                                     <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"    value="@Model.passingThemes[i].openPassingsList[item].ID">
+
+                                    }
                                     //Передача id
                                     <textarea placeholder="Введите ответ на вопрос" rows="4" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="passingThemes[i].openPassingsList[item].Text" ></textarea>
 
