@@ -17,6 +17,7 @@ namespace MpdaTest.Models
         /// Id Курса
         /// </summary>
         public int ID { get; set;}
+        public bool IsPassing {get; set;}
 
         public byte[] bytes { get; set; }
 

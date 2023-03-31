@@ -34,29 +34,32 @@
     <section class="u-align-center u-clearfix u-section-1" id="sec-e832">
          
         <h2 style="text-align:center">@Model.Name</h2>
-      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-          <div class="">
-           <div class="u-container-layout u-container-layout-12">
-               @if (Model.url!=null && Model.bytes!=null)
-               {
-                 <a href="@Model.url"><img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))"  ></a>     
-               }
-               else
-               {
-                    if ( Model.bytes!=null)
-                   {
-                    <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))" >
 
-                   }
-               }
-               <h2 style="text-align:center">@Model.Opisanie</h2>  
-           </div>
-          </div>
-          <div class="u-container-layout u-container-layout-3">
-                                  
-          </div>
-            <form method="post" asp-controller="Home" asp-action="PassingSet">
-              <input type="hidden" asp-for="ID" value="@Model.ID">
+        @if (!Model.IsPassing)
+        {
+            <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+                <div class="">
+                    <div class="u-container-layout u-container-layout-12">
+                        @if (Model.url != null && Model.bytes != null)
+                        {
+                            <a href="@Model.url"><img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))"  ></a>
+                        }
+                        else
+                        {
+                            if (Model.bytes != null)
+                            {
+                                <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))" >
+
+                            }
+                        }
+                        <h2 style="text-align:center">@Model.Opisanie</h2>  
+                    </div>
+                </div>
+                <div class="u-container-layout u-container-layout-3">
+
+                </div>
+                <form method="post" asp-controller="Home" asp-action="PassingSet">
+                    <input type="hidden" asp-for="ID" value="@Model.ID">
 
                     @for (int i = 0; i < Model.passingThemes.Count(); i++)
                     {
@@ -67,99 +70,99 @@
 
                         for (int iS = 0; iS < Model.passingThemes[i].testSortsList.Count(); iS++)
                         {
-                        int item = 0;
-                        switch (Model.passingThemes[i].testSortsList[iS].Type)
-                        {
-                            case "CloseTest":
-                                var Close = Model.passingThemes[i].ClosePassingsList.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
-                                if (Close != null)
-                                {
-                                    item = Model.passingThemes[i].ClosePassingsList.IndexOf(Close);
-                                    <p class="u-form-group u-form-text u-text u-text-2" style="color: #8b680c;">@Model.passingThemes[i].ClosePassingsList[item].Name<br> </p>
-                                    <input type="hidden" asp-for="passingThemes[i].ClosePassingsList[item].Id"    value="@Model.passingThemes[i].ClosePassingsList[item].Id">
-                                    //Передача id
-
-                                    
-                                    <div class="u-form-radio-button-wrapper" style="margin-bottom: 20px;text-align: left;">
-
-                                        @if (!Model.passingThemes[i].ClosePassingsList[item].IsRec)
-                                        {
-                                            <input type="radio" asp-for="@Model.passingThemes[i].ClosePassingsList[item].AnswerTSelect" value="0" checked="checked" >
-                                            <label class="u-label" for="radiobutton">Нет ответа</label>
-                                        }
-                                        @for (int ItemAnswer = 0; ItemAnswer < Model.passingThemes[i].ClosePassingsList[item].answerTs.Count(); ItemAnswer++)
-                                        {
-                                            <div class="u-input-row">
-                                                <input type="radio" asp-for="@Model.passingThemes[i].ClosePassingsList[item].AnswerTSelect" value="@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].ID" checked="checked" >
-                                                @if (Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].TextUser != null)
-                                                {
-                                                    <label class="u-label" for="radiobutton">@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].TextUser</label>
-                                                }
-                                                else
-                                                {
-                                                    <label class="u-label" for="radiobutton">@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].Text</label>
-                                                }
-
-                                            </div>
-                                        }
-
-
-                                    </div>
-
-
-
-
-
-
-                                }
-
-
-                                break;
-
-                            case "OpenTest":
-
-                                var Open = Model.passingThemes[i].openPassingsList.Where(x => x.ID == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
-                                if (Open != null)
-                                {
-                                    item = Model.passingThemes[i].openPassingsList.IndexOf(Open);
-                                   
-                                    <p class="u-form-group u-form-text u-text u-text-1" style="color: #8b680c;">@Model.passingThemes[i].openPassingsList[item].Name</p>
-
-                                    if (Model.passingThemes[i].openPassingsList[item].IsRec)
+                            int item = 0;
+                            switch (Model.passingThemes[i].testSortsList[iS].Type)
+                            {
+                                case "CloseTest":
+                                    var Close = Model.passingThemes[i].ClosePassingsList.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                    if (Close != null)
                                     {
-                                     <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"  required  value="@Model.passingThemes[i].openPassingsList[item].ID">
+                                        item = Model.passingThemes[i].ClosePassingsList.IndexOf(Close);
+                                        <p class="u-form-group u-form-text u-text u-text-2" style="color: #8b680c;">@Model.passingThemes[i].ClosePassingsList[item].Name<br> </p>
+                                        <input type="hidden" asp-for="passingThemes[i].ClosePassingsList[item].Id"    value="@Model.passingThemes[i].ClosePassingsList[item].Id">
+                                        //Передача id
+
+
+                                        <div class="u-form-radio-button-wrapper" style="margin-bottom: 20px;text-align: left;">
+
+                                            @if (!Model.passingThemes[i].ClosePassingsList[item].IsRec)
+                                            {
+                                                <input type="radio" asp-for="@Model.passingThemes[i].ClosePassingsList[item].AnswerTSelect" value="0" checked="checked" >
+                                                <label class="u-label" for="radiobutton">Нет ответа</label>
+                                            }
+                                            @for (int ItemAnswer = 0; ItemAnswer < Model.passingThemes[i].ClosePassingsList[item].answerTs.Count(); ItemAnswer++)
+                                            {
+                                                <div class="u-input-row">
+                                                    <input type="radio" asp-for="@Model.passingThemes[i].ClosePassingsList[item].AnswerTSelect" value="@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].ID" checked="checked" >
+                                                    @if (Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].TextUser != null)
+                                                    {
+                                                        <label class="u-label" for="radiobutton">@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].TextUser</label>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="u-label" for="radiobutton">@Model.passingThemes[i].ClosePassingsList[item].answerTs[ItemAnswer].Text</label>
+                                                    }
+
+                                                </div>
+                                            }
+
+
+                                        </div>
+
+
+
+
+
 
                                     }
-                                    else
+
+
+                                    break;
+
+                                case "OpenTest":
+
+                                    var Open = Model.passingThemes[i].openPassingsList.Where(x => x.ID == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                    if (Open != null)
                                     {
-                                     <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"    value="@Model.passingThemes[i].openPassingsList[item].ID">
+                                        item = Model.passingThemes[i].openPassingsList.IndexOf(Open);
+
+                                        <p class="u-form-group u-form-text u-text u-text-1" style="color: #8b680c;">@Model.passingThemes[i].openPassingsList[item].Name</p>
+
+                                        if (Model.passingThemes[i].openPassingsList[item].IsRec)
+                                        {
+                                            <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"  required  value="@Model.passingThemes[i].openPassingsList[item].ID">
+
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" asp-for="passingThemes[i].openPassingsList[item].ID"    value="@Model.passingThemes[i].openPassingsList[item].ID">
+
+                                        }
+                                        //Передача id
+                                        <textarea placeholder="Введите ответ на вопрос" rows="4" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="passingThemes[i].openPassingsList[item].Text" ></textarea>
 
                                     }
-                                    //Передача id
-                                    <textarea placeholder="Введите ответ на вопрос" rows="4" cols="50" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="passingThemes[i].openPassingsList[item].Text" ></textarea>
-
-                                }
 
 
-                                break;
+                                    break;
 
-                            case "TableTest":
+                                case "TableTest":
                                     var Table = Model.passingThemes[i].TablePassings.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
                                     item = Model.passingThemes[i].TablePassings.IndexOf(Table);
-                                    if (Table!=null)
+                                    if (Table != null)
                                     {
-                                        
+
                                         <div class="u-expanded-width u-table u-table-responsive u-table-1">
                                             <h3 style="text-align:center">@Table.Name</h3>
 
                                             <table class="u-table-entity u-table-entity-1">
 
                                                 <colgroup>
-                                                        <col width="20%">
-                                                        <col width="20%">
-                                                        <col width="20%">
-                                                        <col width="20%">
-                                                        <col width="20%">
+                                                    <col width="20%">
+                                                    <col width="20%">
+                                                    <col width="20%">
+                                                    <col width="20%">
+                                                    <col width="20%">
 
                                                 </colgroup>
 
@@ -169,80 +172,86 @@
                                                             @Table.Opisanie
                                                         </th>
 
-                                                            @for (int iNameQ = 0; iNameQ <Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues.Count(); iNameQ++)
-                                                            {
-                                                             <th class="u-border-1 u-border-black u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues[iNameQ].Name</th>
+                                                        @for (int iNameQ = 0; iNameQ < Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues.Count(); iNameQ++)
+                                                        {
+                                                            <th class="u-border-1 u-border-black u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues[iNameQ].Name</th>
 
-                                                            }
+                                                        }
 
 
-                                                            
+
 
                                                     </tr>
                                                 </thead>
 
                                                 <tbody class="u-table-body">
 
-                                                            @for (int iThemeTable = 0; iThemeTable <Model.passingThemes[i].TablePassings[item].TableThemes.Count(); iThemeTable++)
+                                                    @for (int iThemeTable = 0; iThemeTable < Model.passingThemes[i].TablePassings[item].TableThemes.Count(); iThemeTable++)
+                                                    {
+                                                        <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID"    value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID">
+                                                        <tr style="height: 75px;">
+                                                            <td class="u-border-1 u-border-grey-30 u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].Name</td>
+
+                                                            @for (int iQ = 0; iQ < Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues.Count(); iQ++)
                                                             {
-                                                              <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID"    value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID">
-                                                              <tr style="height: 75px;">
-                                                                <td class="u-border-1 u-border-grey-30 u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].Name</td>
+                                                                <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID" value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID">
+                                                                <td class="u-border-1 u-border-grey-30 u-table-cell">
+                                                                    <select style="width: -moz-available;background-color: #0000;border-radius: 7px;border-width: 2px !important;;border: groove;" title="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Name&#013;@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].Name " data-val="true" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Count" >
 
-                                                                    @for (int iQ = 0; iQ <Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues.Count(); iQ++)
-                                                                    {
-                                                                        <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID" value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID">
-                                                                        <td class="u-border-1 u-border-grey-30 u-table-cell">
-                                                                                <select style="width: -moz-available;background-color: #0000;border-radius: 7px;border-width: 2px !important;;border: groove;" title="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Name @Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].Name " data-val="true" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Count" >
+                                                                        @if (!Model.passingThemes[i].TablePassings[item].IsRec)
+                                                                        {
+                                                                            <option value="0" selected="selected">Нет ответа</option>
+                                                                        }
 
-                                                                                    @if (!Model.passingThemes[i].TablePassings[item].IsRec)
-                                                                                    {
-                                                                                        <option value="0" selected="selected">Нет ответа</option>
-                                                                                    }
 
-                                                                                        
-                                                                                    <option value="1">1 балл</option>
-                                                                                    <option value="2">2 балла</option>
-                                                                                    <option value="3">3 балла</option>
-                                                                                    <option value="4">4 балла</option>
-                                                                                    <option value="5">5 баллов</option>
+                                                                        <option value="1">1 балл</option>
+                                                                        <option value="2">2 балла</option>
+                                                                        <option value="3">3 балла</option>
+                                                                        <option value="4">4 балла</option>
+                                                                        <option value="5">5 баллов</option>
 
-                                                                                </select>
-                                                                        </td>
-                                                                    }
-
-                                                                
-
-                                                              </tr>
-                                                            
+                                                                    </select>
+                                                                </td>
                                                             }
-                                                            
 
-                                                        
-                                                  
+
+
+                                                        </tr>
+
+                                                    }
+
+
+
+
 
 
                                                 </tbody>
                                             </table>
-                                         </div>
+                                        </div>
 
 
 
                                     }
 
-                                break;
+                                    break;
 
 
 
+                            }
                         }
                     }
-                    }
-            <div class="col-lg-12">
-            <button class="u-btn u-btn-submit u-button-style">Отправить ответы</button>
+                    <div class="col-lg-12">
+                        <button class="u-btn u-btn-submit u-button-style">Отправить ответы</button>
+                    </div>
+                </form>
             </div>
-    </form>
-    </div>
-    </section>
+        }
+        else
+        {
+                <h2 style="text-align:center">Спасибо за участите! <br> Тест пройден.</h2>
+        }
+
+</section>
   
    
     

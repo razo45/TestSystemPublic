@@ -68,7 +68,7 @@
                         {
                             <tr style="height: 75px;">
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">
-                                    <a href="/Home/TsOpen?IDts=60" class="genric-btn link">@item.Name</a>
+                                    <a href="@Url.Action("OtchetTest","Home", new{Id=@item.ID} )" class="genric-btn link">@item.Name</a>
 
                                 </td>
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">@item.AllCount</td>

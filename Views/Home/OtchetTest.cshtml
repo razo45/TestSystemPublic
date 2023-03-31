@@ -1,0 +1,306 @@
+﻿@model MpdaTest.Models.PassingTestModel;    
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="ru"><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+      
+
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+<link rel="stylesheet" href="TetsPage.css" media="screen">
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 5.1.5, nicepage.com">
+    <meta name="referrer" content="origin">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    
+
+  <meta charset="utf-8">
+    <title>Резкльтаты теста</title>
+    <link rel="stylesheet" href="~/css/accordion.css">
+
+  <script src="/js/loader.js"></script>
+
+              <script>
+    class ItcAccordion {
+      constructor(target, config) {
+        this._el = typeof target === 'string' ? document.querySelector(target) : target;
+        const defaultConfig = {
+          alwaysOpen: true
+        };
+        this._config = Object.assign(defaultConfig, config);
+        this.addEventListener();
+      }
+      addEventListener() {
+        this._el.addEventListener('click', (e) => {
+          const elHeader = e.target.closest('.accordion__header');
+          if (!elHeader) {
+            return;
+          }
+          if (!this._config.alwaysOpen) {
+            const elOpenItem = this._el.querySelector('.accordion__item_show');
+            if (elOpenItem) {
+              elOpenItem !== elHeader.parentElement ? elOpenItem.classList.toggle('accordion__item_show') : null;
+            }
+          }
+          elHeader.parentElement.classList.toggle('accordion__item_show');
+        });
+      }
+    }
+
+ 
+  </script>
+     
+    
+
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="TetsPage">
+    <meta property="og:type" content="website">
+  </head>
+  <body class="u-body u-xl-mode" data-lang="ru">
+
+    <section class="u-align-center u-clearfix u-section-1" id="sec-e832">
+         
+        <h2 style="text-align:center">@Model.Name</h2>
+      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+          <div class="">
+           <div class="u-container-layout u-container-layout-12">
+               @if (Model.url!=null && Model.bytes!=null)
+               {
+                 <a href="@Model.url"><img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))"  ></a>     
+               }
+               else
+               {
+                    if ( Model.bytes!=null)
+                   {
+                    <img class="u-align-center u-expanded-width u-image u-image-contain u-image-default u-image-2" style="max-height: 600px;" src="data:image/jpg;base64,@(Convert.ToBase64String(Model.bytes))" >
+
+                   }
+               }
+               <h2 style="text-align:center">@Model.Opisanie</h2>  
+           </div>
+          </div>
+          <div class="u-container-layout u-container-layout-3">
+                                  
+          </div>
+           
+              <input type="hidden" asp-for="ID" value="@Model.ID">
+
+                    @for (int i = 0; i < Model.passingThemes.Count(); i++)
+                    {
+                        <h2 style="text-align:center">@Model.passingThemes[i].Name</h2>
+
+                        <input type="hidden" asp-for="passingThemes[i].ID"    value="@Model.passingThemes[i].ID">
+                        //Передача id темы
+
+                        for (int iS = 0; iS < Model.passingThemes[i].testSortsList.Count(); iS++)
+                        {
+                        int item = 0;
+                        switch (Model.passingThemes[i].testSortsList[iS].Type)
+                        {
+                            case "CloseTest":
+                                
+                            <!--Создание вопросов с выбором ответа-->
+                                 
+                            var Close = Model.passingThemes[i].ClosePassingsList.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                if (Close != null)
+                                {
+                                    item = Model.passingThemes[i].ClosePassingsList.IndexOf(Close);
+                                    <div id="0 oil @Close.Id" style="width: 600px; height: 400px;">
+
+                                    </div>
+                                                      <script type="text/javascript">
+                                                           google.load("visualization", "1", {packages:["corechart"]});
+                                                           google.setOnLoadCallback(drawChart);
+                                                           google.setOnLoadCallback(drawChart);
+                                                           google.setOnLoadCallback(drawChart);
+
+                                                        function drawChart() {
+                                                            var name = JSON.parse('@Html.Raw(Json.Serialize(Model.passingThemes[i].ClosePassingsList[item].Name))');                                                                                                                      
+
+                                                        
+                                                            var fruits = [];
+                                                             fruits.push("1");
+
+
+                                                            let fruits123 = [];
+                                                             fruits123.push(JSON.parse('@Html.Raw(Json.Serialize(Model.passingThemes[i].ClosePassingsList[item].Name))'));
+                                                            
+                                                            
+                                                            @foreach (var item2 in Model.passingThemes[i].ClosePassingsList[item].answerTs)
+                                                            {
+                                                                if (item2.TextUser==null)
+                                                                {
+                                                                    @:fruits.push(JSON.parse('@Html.Raw(Json.Serialize(item2.Text))'));
+                                                                }
+                                                                else
+                                                                {
+                                                                    @:fruits.push(JSON.parse('@Html.Raw(Json.Serialize(item2.TextUser))'));
+                                                                }
+                                                                
+                                                                @:fruits123.push(@item2.NumberOfSelected);
+                                                                
+                                                            }
+                                                                
+
+                                                            
+                                                            
+                                                            var data = google.visualization.arrayToDataTable([
+                                                                fruits,
+                                                                fruits123
+                                                            ]);
+
+
+                                                            var options = {
+                                                             vAxis: {title: 'Ответы'},
+                                                             outerWidth:200//Полоса Y
+                                                            };
+                                                            var chart = new google.visualization.ColumnChart(document.getElementById('0 oil @Close.Id'));
+                                                            chart.draw(data, options);
+                                                        }                      
+                                                      </script>
+                                }
+                            
+
+
+                                break;
+
+                            case "OpenTest":
+
+                                    <!--Создание открытых вопросов-->
+                                var Open = Model.passingThemes[i].openPassingsList.Where(x => x.ID == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                if (Open != null)
+                                {
+                                        <div class="accordion" id="accordion-@Open.ID" style="margin-top: 20px;">
+                                      <div class="accordion__item ">
+                                        <div class="accordion__header">
+                                          Ответы: @Open.Name;
+                                        </div>
+                                        <div class="accordion__body">
+                                          <div class="u-container-layout u-valign-top u-container-layout-1">
+                                            <ul class="u-custom-list u-text u-text-3">
+                                                @foreach (var item3 in Open.Otv)
+                                                        {
+                                                    <li>
+                                                        <div class="" style="text-align: left;padding: 10px;  border: solid;border-color: #cea446;border-radius: 12px;">
+                                                        @item3
+                                                        </div>
+
+
+                                                    </li>
+                                                        }
+                                                     
+                                            </ul>
+                                          </div>
+                                    
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                      <script>
+                                             new ItcAccordion('#accordion-@Open.ID');
+                                      </script>
+
+                                }
+
+                                
+
+
+                                break;
+
+                            case "TableTest":
+                                    var Table = Model.passingThemes[i].TablePassings.Where(x => x.Id == Model.passingThemes[i].testSortsList[iS].IDques).FirstOrDefault();
+                                    item = Model.passingThemes[i].TablePassings.IndexOf(Table);
+                                    if (Table!=null)
+                                    {
+                                        
+                                        <div class="u-expanded-width u-table u-table-responsive u-table-1">
+                                            <h3 style="text-align:center">@Table.Name</h3>
+
+                                            <table class="u-table-entity u-table-entity-1">
+
+                                                <colgroup>
+                                                        <col width="20%">
+                                                        <col width="20%">
+                                                        <col width="20%">
+                                                        <col width="20%">
+                                                        <col width="20%">
+
+                                                </colgroup>
+
+                                                <thead class="u-black u-table-header u-table-header-1">
+                                                    <tr style="height: 21px;">
+                                                        <th class="u-border-1 u-border-black u-table-cell"> 
+                                                            @Table.Opisanie
+                                                        </th>
+
+                                                            @for (int iNameQ = 0; iNameQ <Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues.Count(); iNameQ++)
+                                                            {
+                                                             <th class="u-border-1 u-border-black u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[0].TableQues[iNameQ].Name</th>
+
+                                                            }
+
+
+                                                            
+
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="u-table-body">
+
+                                                            @for (int iThemeTable = 0; iThemeTable <Model.passingThemes[i].TablePassings[item].TableThemes.Count(); iThemeTable++)
+                                                            {
+                                                              <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID"    value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].ID">
+                                                              <tr style="height: 75px;">
+                                                                <td  class="u-border-1 u-border-grey-30 u-table-cell">@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].Name</td>
+
+                                                                    @for (int iQ = 0; iQ <Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues.Count(); iQ++)
+                                                                    {
+                                                                        <input type="hidden" asp-for="passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID" value="@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].ID">
+                                                                        <td title="Среднее значение&#013;Всего голосов" class="u-border-1 u-border-grey-30 u-table-cell" style="text-align: center;">
+                                                                                <h6>@Math.Round(Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Sred, 2)</h6>
+                                                                                <h6>@Model.passingThemes[i].TablePassings[item].TableThemes[iThemeTable].TableQues[iQ].Count</h6>
+                                                                        </td>
+                                                                    }
+
+                                                                
+
+                                                              </tr>
+                                                            
+                                                            }
+                                                            
+
+                                                        
+                                                  
+
+
+                                                </tbody>
+                                            </table>
+                                         </div>
+
+
+
+                                    }
+
+                                break;
+
+
+
+                        }
+                    }
+                    }
+           
+
+    </div>
+
+
+
+    </section>
+  
+   
+    
+
+  
+</body></html>
