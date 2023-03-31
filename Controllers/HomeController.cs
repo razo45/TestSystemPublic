@@ -80,34 +80,38 @@ namespace MpdaTest.Controllers
 
                     foreach (TestAnswer testAnswer4 in BD.TestAnswer.Where(x => x.IDTheme == themeTest4.ID).ToList())
                     {
-
-
-                        row1 += 2;
-                        xlWorksheet1.Cell(row1, 1).Value = testAnswer4.Question;
-                        int column = 1;
-
-                        AnswerT[] array = this.BD.AnswerT.Where(x => x.IDTestAnswer == testAnswer4.ID).ToArray();
-                        double num5 = 0.0;
-                        double num6 = 0.0;
-                        for (int index = 0; index < array.Length; ++index)
-                            num6 += (double)array[index].NumberOfSelected;
-                        for (int index = 0; index < array.Length; ++index)
+                        if (BD.TestSort.Where(x => x.IDques == testAnswer4.ID && x.Type == "CloseTest").Any())
                         {
-                            num5 += (double)((index + 1) * array[index].NumberOfSelected);
-                            ++column;
-                            xlWorksheet1.Cell(row1, column).Value = array[index].NumberOfSelected;
-                            xlWorksheet1.Cell(row1 + 1, column).Value = (((double)(array[index].NumberOfSelected * 100) / num6).ToString() + "%");
+                            row1 += 2;
+                            xlWorksheet1.Cell(row1, 1).Value = testAnswer4.Question;
+                            int column = 1;
+
+                            AnswerT[] array = this.BD.AnswerT.Where(x => x.IDTestAnswer == testAnswer4.ID).ToArray();
+                            double num5 = 0.0;
+                            double num6 = 0.0;
+                            for (int index = 0; index < array.Length; ++index)
+                                num6 += (double)array[index].NumberOfSelected;
+                            for (int index = 0; index < array.Length; ++index)
+                            {
+                                num5 += (double)((index + 1) * array[index].NumberOfSelected);
+                                ++column;
+                                xlWorksheet1.Cell(row1, column).Value = array[index].NumberOfSelected;
+                                xlWorksheet1.Cell(row1 + 1, column).Value = (((double)(array[index].NumberOfSelected * 100) / num6).ToString() + "%");
+                            }
+                            double num7 = num5 / num6;
+                            xlWorksheet1.Cell(row1, num4 + 2).Value = num6;
+                            xlWorksheet1.Cell(row1, num4 + 3).Value = num7;
+                            double num8 = 0.0;
+                            for (int index = 0; index < array.Length; ++index)
+                                num8 += Math.Pow((double)(index + 1) - num7, 2.0) * (double)array[index].NumberOfSelected;
+                            double num9 = num8 / num6;
+
+
+                            xlWorksheet1.Cell(row1, num4 + 4).Value = num9;
                         }
-                        double num7 = num5 / num6;
-                        xlWorksheet1.Cell(row1, num4 + 2).Value = num6;
-                        xlWorksheet1.Cell(row1, num4 + 3).Value = num7;
-                        double num8 = 0.0;
-                        for (int index = 0; index < array.Length; ++index)
-                            num8 += Math.Pow((double)(index + 1) - num7, 2.0) * (double)array[index].NumberOfSelected;
-                        double num9 = num8 / num6;
 
 
-                        xlWorksheet1.Cell(row1, num4 + 4).Value = num9;
+                         
                     }
                 }
 
@@ -121,19 +125,22 @@ namespace MpdaTest.Controllers
 
                     foreach (TestOpen testOpen2 in BD.TestOpen.Where(x => x.IDTheme == themeTest6.ID))
                     {
+                        if (BD.TestSort.Where(x => x.IDques == testOpen2.ID && x.Type == "OpenTest").Any())
+                        {
+                            xlWorksheet2.Cell(row2, 1).Value = testOpen2.Question;
+                            string str = "";
+                            DbSet<AnswerOpenTest> answerOpenTest1 = this.BD.AnswerOpenTest;
 
 
-                        xlWorksheet2.Cell(row2, 1).Value = testOpen2.Question;
-                        string str = "";
-                        DbSet<AnswerOpenTest> answerOpenTest1 = this.BD.AnswerOpenTest;
+                            foreach (AnswerOpenTest answerOpenTest2 in BD.AnswerOpenTest.Where(x => x.IDTestOpen == testOpen2.ID).ToList())
+                                str = str + "(" + answerOpenTest2.Answer + ") ";
 
 
-                        foreach (AnswerOpenTest answerOpenTest2 in BD.AnswerOpenTest.Where(x => x.IDTestOpen == testOpen2.ID).ToList())
-                            str = str + "(" + answerOpenTest2.Answer + ") ";
+                            xlWorksheet2.Cell(row2, 2).Value = str;
+                            ++row2;
+                        }
 
-
-                        xlWorksheet2.Cell(row2, 2).Value = str;
-                        ++row2;
+                           
                     }
                 }
 
@@ -151,67 +158,70 @@ namespace MpdaTest.Controllers
                     foreach (TableTest tableTest2 in BD.TableTest.Where(x => x.IDTheme == themeTest8.ID).ToList())
                     {
 
-
-                        xlWorksheet3.Cell(row3, 1).Value = tableTest2.Desp;
-                        xlWorksheet4.Cell(row3, 1).Value = tableTest2.Desp;
-                        xlWorksheet5.Cell(row3, 1).Value = tableTest2.Desp;
-                        int column1 = 2;
-
-                        foreach (question question2 in BD.question.Where(x => x.IDTable == tableTest2.ID).ToList())
+                        if (BD.TestSort.Where(x=>x.IDques== tableTest2.ID && x.Type== "TableTest").Any())
                         {
-                            xlWorksheet3.Cell(row3, column1).Value = question2.Text;
-                            xlWorksheet4.Cell(row3, column1).Value = question2.Text;
-                            xlWorksheet5.Cell(row3, column1).Value = question2.Text;
-                            ++column1;
-                        }
+                            xlWorksheet3.Cell(row3, 1).Value = tableTest2.Desp;
+                            xlWorksheet4.Cell(row3, 1).Value = tableTest2.Desp;
+                            xlWorksheet5.Cell(row3, 1).Value = tableTest2.Desp;
+                            int column1 = 2;
 
-                        foreach (Theme theme2 in BD.Theme.Where(x => x.IDTable == tableTest2.ID).ToList())
-                        {
-
-
-                            ++row3;
-                            int column2 = 2;
-                            xlWorksheet3.Cell(row3, 1).Value = theme2.Text;
-                            xlWorksheet4.Cell(row3, 1).Value = theme2.Text;
-                            xlWorksheet5.Cell(row3, 1).Value = theme2.Text;
-
-
-                            foreach (question question4 in BD.question.Where(x => x.IDTable == tableTest2.ID).ToList())
+                            foreach (question question2 in BD.question.Where(x => x.IDTable == tableTest2.ID).ToList())
                             {
-
-                                var array = BD.AnswerTheme.Where(x => x.IDTheme == theme2.ID && x.IDQuestion == question4.ID).ToList();
-
-                                if (array.Count()!=0)
-                                {
-                                    double num10 = 0.0;
-                                    for (int index = 0; index < array.Count(); ++index)
-                                        num10 += int.Parse(array[index].AnswerText);
-
-
-                                    double num11 = num10 / array.Count();
-                                    double num12 = 0.0;
-
-                                    for (int i = 0; i < 5; i++)
-                                    {
-
-
-                                        int num13 = BD.AnswerTheme.Where(x => x.IDTheme == theme2.ID && x.IDQuestion == question4.ID && x.AnswerText == i.ToString()).Count();
-
-                                        num12 += Math.Pow((double)(i + 1) - num11, 2.0) * (double)num13;
-                                    }
-                                    double num14 = num12 / num11;
-                                    xlWorksheet3.Cell(row3, column2).Value = num10;
-                                    xlWorksheet4.Cell(row3, column2).Value = num11;
-                                    xlWorksheet5.Cell(row3, column2).Value = Math.Round(num14, 2);
-                                    ++column2;
-                                }
-                                
+                                xlWorksheet3.Cell(row3, column1).Value = question2.Text;
+                                xlWorksheet4.Cell(row3, column1).Value = question2.Text;
+                                xlWorksheet5.Cell(row3, column1).Value = question2.Text;
+                                ++column1;
                             }
 
-                           
-                        }
+                            foreach (Theme theme2 in BD.Theme.Where(x => x.IDTable == tableTest2.ID).ToList())
+                            {
 
-                        row3 +=1;
+
+                                ++row3;
+                                int column2 = 2;
+                                xlWorksheet3.Cell(row3, 1).Value = theme2.Text;
+                                xlWorksheet4.Cell(row3, 1).Value = theme2.Text;
+                                xlWorksheet5.Cell(row3, 1).Value = theme2.Text;
+
+
+                                foreach (question question4 in BD.question.Where(x => x.IDTable == tableTest2.ID).ToList())
+                                {
+
+                                    var array = BD.AnswerTheme.Where(x => x.IDTheme == theme2.ID && x.IDQuestion == question4.ID).ToList();
+
+                                    if (array.Count() != 0)
+                                    {
+                                        double num10 = 0.0;
+                                        for (int index = 0; index < array.Count(); ++index)
+                                            num10 += int.Parse(array[index].AnswerText);
+
+
+                                        double num11 = num10 / array.Count();
+                                        double num12 = 0.0;
+
+                                        for (int i = 0; i < 5; i++)
+                                        {
+
+
+                                            int num13 = BD.AnswerTheme.Where(x => x.IDTheme == theme2.ID && x.IDQuestion == question4.ID && x.AnswerText == i.ToString()).Count();
+
+                                            num12 += Math.Pow((double)(i + 1) - num11, 2.0) * (double)num13;
+                                        }
+                                        double num14 = num12 / num11;
+                                        xlWorksheet3.Cell(row3, column2).Value = num10;
+                                        xlWorksheet4.Cell(row3, column2).Value = num11;
+                                        xlWorksheet5.Cell(row3, column2).Value = Math.Round(num14, 2);
+                                        ++column2;
+                                    }
+
+                                }
+
+
+                            }
+
+                            row3 += 2;
+                        }
+                        
 
                     }
                 }
