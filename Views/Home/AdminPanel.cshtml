@@ -75,9 +75,9 @@
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">@item.Count</td>
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">@item.date</td>
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">
-                                 <a href="/Home/CreateOtchet?IdTest=60" class="genric-btn link">Выгрузить данные</a>
+                                 <a href="@Url.Action("CreateOtchet","Home", new{IdTest=@item.ID})" class="genric-btn link">Выгрузить данные</a>
                                 </td>
-
+                                
                                 <td class="u-border-1 u-border-grey-30 u-table-cell">
                                  <a href="@Url.Action("ChangingTest","Home", new{IdTest=@item.ID})" class="genric-btn link">Изменить тест</a>
                                 </td>
