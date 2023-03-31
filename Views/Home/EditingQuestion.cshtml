@@ -27,7 +27,7 @@
                                           <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="editingCloseModel.NewQues"></textarea>
                                         </div>
                                          <div class="u-form-checkbox u-form-group u-form-group-2">
-                                          <input type="checkbox" value="@Model.editingCloseModel.IsRec" asp-for="editingCloseModel.IsRec">
+                                          <input type="checkbox"  asp-for="editingCloseModel.IsRec">
                                           <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
                                         </div>
                                         <p class="news__item-date" style="text-align: left;">*При пустом поле "Ответы" и удалении всех имеющихся ответов, автоматически присваиваются варианты ответов от 1 до 5*</p>
@@ -55,7 +55,7 @@
                                         </div>
 
                                         <div class="u-form-checkbox u-form-group u-form-group-2">
-                                          <input type="checkbox" asp-for="editingOpenModel.IsRec" value="@Model.editingOpenModel.IsRec">
+                                          <input type="checkbox" asp-for="editingOpenModel.IsRec" >
                                           <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
                                         </div>
                                          <button class="u-btn u-btn-submit u-button-style">Изменить</button>
@@ -67,7 +67,7 @@
                     break;
 
                 case "TableTest":
-                                      <form method="post" asp-action="CreateTable" style="padding: 10px;" asp-action="EditingQuestionSet" asp-controller="Home">
+                                      <form method="post" style="padding: 10px;" asp-action="EditingQuestionSet" asp-controller="Home">
                                        <input type="hidden" value="@Model.Type" required="" asp-for="Type"/>
                                        <input type="hidden" value="@Model.IdTest" required="" asp-for="IdTest"/>
                                        <input type="hidden" value="@Model.editingTableModel.Id" required="" asp-for="editingTableModel.Id" />
@@ -106,21 +106,21 @@
 
                                         <div class="u-form-group u-form-message">
                                           <label for="message-63ce" class="u-label">Темы</label>
-                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="Themes" name="Themes">
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="editingTableModel.NewAnswer">
 </textarea>
                                         </div>
                                         <div class="u-form-group u-form-textarea u-form-group-5">
                                           <label for="textarea-ed30" class="u-label">Вопросы</label>
-                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" id="Q" name="Q">
+                                          <textarea class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" asp-for="editingTableModel.NewQues">
 </textarea>
                                         </div>
                                         <div class="u-form-checkbox u-form-group u-form-group-2">
-                                          <input type="checkbox" checked="checked" asp-for="editingTableModel.IsRec" value="@Model.editingTableModel.IsRec">
+                                          <input type="checkbox"  asp-for="editingTableModel.IsRec" >
                                           <label for="checkbox-3fcb" class="u-label">Обязательный вопрос</label>
                                         </div>
                                         <button class="u-btn u-btn-submit u-button-style">Изменить</button>
 
-                                      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8CEDsjbd98hFo8FUJsvNGV_Qh7XcP67MJ7bxdgY5Vcuk3Pywloo4J58zx1JgMu-_lajJR78ApWJakW_0Blree13hGLG0ydIE5Ot_RSGRKav73puKJw9CPHnkR-KOX1gdVk39AqvLrlYzOA3-kqrKC_8" /><input name="tableModel.IsRec" type="hidden" value="false"></form>
+                                      </form>
 
                     
                     break;

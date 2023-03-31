@@ -383,28 +383,35 @@ namespace MpdaTest.Controllers
                 this.BD.SaveChanges();
 
 
-
-                string[] strArray1 = model.CreateTable.Themes.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                string[] strArray2 = model.CreateTable.Q.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-
-
-                foreach (string str in strArray1)
+                if (model.CreateTable.Themes !=null)
                 {
-                    this.BD.Theme.Add(new Theme()
+                    string[] strArray1 = model.CreateTable.Themes.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    foreach (string str in strArray1)
                     {
-                        IDTable = entity1.ID,
-                        Text = str
-                    });
+                        this.BD.Theme.Add(new Theme()
+                        {
+                            IDTable = entity1.ID,
+                            Text = str
+                        });
+                    }
                 }
-
-                foreach (string str in strArray2)
+                if (model.CreateTable.Q !=null)
                 {
-                    this.BD.question.Add(new question()
+                    string[] strArray2 = model.CreateTable.Q.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+
+
+
+                    foreach (string str in strArray2)
                     {
-                        IDTable = entity1.ID,
-                        Text = str
-                    });
+                        this.BD.question.Add(new question()
+                        {
+                            IDTable = entity1.ID,
+                            Text = str
+                        });
+                    }
                 }
+                
 
                 this.BD.SaveChanges();
 
@@ -690,7 +697,10 @@ namespace MpdaTest.Controllers
         #endregion
 
 
-        #region Удаление вариантов ответов
+        #region Удаление вариантов ответов (Добавить проверку на админа) ✔
+
+        //Удаление варианта ответа из вопроса с ответами ✔
+        //Добавить проверку на админа
         public async Task<IActionResult> DeleteAnswerClose(int IdTest, int IDques, int IdAnswer, string Type)
         {
 
@@ -700,7 +710,7 @@ namespace MpdaTest.Controllers
         }
         
         
-        //Редактирование таблицы из темы ✔
+        //Удаление темы из таблицы ✔
         //Добавить проверку на админа
         public async Task<IActionResult> DeleteAnswerTable(int IdTest, int IDques, int IdAnswer, string Type)
         {
@@ -716,7 +726,7 @@ namespace MpdaTest.Controllers
         }
         
         
-        //Редактирование таблицы из темы ✔
+        //Удаление вопроса из таблицы ✔
         //Добавить проверку на админа
         public async Task<IActionResult> DeleteQuesTable(int IdTest, int IDques, int IdAnswer, string Type)
         {
@@ -732,7 +742,7 @@ namespace MpdaTest.Controllers
         }
        
         
-        //Удлаение вопроса таблицы из темы ✔
+        //Редактирование таблицы из темы ✔
         //Добавить проверку на админа
         public async Task<IActionResult> EditingQuestionSet(EditingQuestionViewModel model)
         {
@@ -817,6 +827,56 @@ namespace MpdaTest.Controllers
                     break;
 
                 case "TableTest":
+                    var itemTable = await BD.TableTest.Where(x => x.ID == model.editingTableModel.Id).FirstOrDefaultAsync();
+
+                    itemTable.Desp = model.editingTableModel.Desc;
+                    itemTable.necessarily = model.editingTableModel.IsRec;
+                    itemTable.Name = model.editingTableModel.Name;
+
+
+                    foreach (var item in model.editingTableModel.AnswerList)
+                    {
+                        var Ans = await BD.Theme.Where(x => x.ID == item.Key).FirstOrDefaultAsync();
+                        Ans.Text = item.Value;
+                    }
+
+                    foreach (var item in model.editingTableModel.QuesList)
+                    {
+                        var Ques = await BD.question.Where(x => x.ID == item.Key).FirstOrDefaultAsync();
+                        Ques.Text = item.Value; 
+                    }
+
+
+                    if (model.editingTableModel.NewAnswer != null)
+                    {
+                        string[] strArray1 = model.editingTableModel.NewAnswer.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                        foreach (string str in strArray1)
+                        {
+                            this.BD.Theme.Add(new Theme()
+                            {
+                                IDTable = itemTable.ID,
+                                Text = str
+                            });
+                        }
+
+                    }
+
+                    if (model.editingTableModel.NewQues != null)
+                    {
+                        string[] strArray2 = model.editingTableModel.NewQues.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                        foreach (string str in strArray2)
+                        {
+                            this.BD.question.Add(new question()
+                            {
+                                IDTable = itemTable.ID,
+                                Text = str
+                            });
+                        }
+
+                    }
+
+                    
+
                     
 
                     break;
@@ -827,7 +887,9 @@ namespace MpdaTest.Controllers
             return RedirectToAction("ChangingTest", "Home", new { IdTest = model.IdTest});
         }
         #endregion
-        //Редактирование таблицы из темы ✔
+
+
+        //Отображение редактирования вопроса из темы ✔
         //Добавить проверку на админа
         public async Task<IActionResult> EditingQuestion(int IdTest, int IDques, string Type)
         {
@@ -864,7 +926,7 @@ namespace MpdaTest.Controllers
 
 
 
-                    //Удаление открытого вопроса
+                    
                     var itemOpen = await BD.TestOpen.Where(x => x.ID == IDques).FirstOrDefaultAsync();
                     viewModel.editingOpenModel = new EditingOpenModel();
                     viewModel.editingOpenModel.Id = itemOpen.ID;
