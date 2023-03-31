@@ -180,32 +180,39 @@ namespace MpdaTest.Controllers
                             {
 
                                 var array = BD.AnswerTheme.Where(x => x.IDTheme == theme2.ID && x.IDQuestion == question4.ID).ToList();
-                                
-                                double num10 = 0.0;
-                                for (int index = 0; index < array.Count(); ++index)
-                                    num10 += int.Parse(array[index].AnswerText);
 
-
-                                double num11 = num10 / array.Count();
-                                double num12 = 0.0;
-
-                                for (int i = 0; i < 5; i++)
+                                if (array.Count()!=0)
                                 {
+                                    double num10 = 0.0;
+                                    for (int index = 0; index < array.Count(); ++index)
+                                        num10 += int.Parse(array[index].AnswerText);
 
 
-                                    int num13 = BD.AnswerTheme.Where(x=> x.IDTheme == theme2.ID && x.IDQuestion == question4.ID && x.AnswerText == i.ToString()).Count();
-                                  
-                                    num12 += Math.Pow((double)(i + 1) - num11, 2.0) * (double)num13;
+                                    double num11 = num10 / array.Count();
+                                    double num12 = 0.0;
+
+                                    for (int i = 0; i < 5; i++)
+                                    {
+
+
+                                        int num13 = BD.AnswerTheme.Where(x => x.IDTheme == theme2.ID && x.IDQuestion == question4.ID && x.AnswerText == i.ToString()).Count();
+
+                                        num12 += Math.Pow((double)(i + 1) - num11, 2.0) * (double)num13;
+                                    }
+                                    double num14 = num12 / num11;
+                                    xlWorksheet3.Cell(row3, column2).Value = num10;
+                                    xlWorksheet4.Cell(row3, column2).Value = num11;
+                                    xlWorksheet5.Cell(row3, column2).Value = Math.Round(num14, 2);
+                                    ++column2;
                                 }
-                                double num14 = num12 / num11;
-                                xlWorksheet3.Cell(row3, column2).Value = num10;
-                                xlWorksheet4.Cell(row3, column2).Value = num11;
-                                xlWorksheet5.Cell(row3, column2).Value = num14;
-                                ++column2;
+                                
                             }
 
-                            row3 += 2;
+                           
                         }
+
+                        row3 +=1;
+
                     }
                 }
 
