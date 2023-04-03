@@ -111,7 +111,7 @@ namespace MpdaTest.Controllers
                             double num9 = num8 / num6;
 
 
-                            xlWorksheet1.Cell(row1, num4 + 4).Value = Math.Round(num9, 2) ;
+                            xlWorksheet1.Cell(row1, num4 + 4).Value = Math.Round(num9, 2);
                         }
 
 
@@ -192,48 +192,60 @@ namespace MpdaTest.Controllers
                                 {
 
                                     var array = BD.AnswerTheme.Where(x => x.IDTheme == theme2.ID && x.IDQuestion == question4.ID).ToList();
-
-                                    if (array.Count() != 0)
+                                    if (array != null)
                                     {
-                                        double num10 = 0.0;
-                                        for (int index = 0; index < 5; ++index)
-                                            num10 = num10+ array.Where(x => x.AnswerText == (index + 1).ToString()).Count();
 
-                                        var vsego = array.Count();
 
-                                        double srednee = 0;
-
-                                        foreach (var item in array)
+                                        if (array.Count() != 0)
                                         {
-                                            srednee += double.Parse(item.AnswerText);
+                                            double num10 = 0.0;
+                                            for (int index = 0; index < 5; ++index)
+                                                num10 = num10 + array.Where(x => x.AnswerText == (index + 1).ToString()).Count();
 
+                                            var vsego = array.Count();
+
+                                            double srednee = 0;
+
+                                            foreach (var item in array)
+                                            {
+                                                srednee += double.Parse(item.AnswerText);
+
+                                            }
+                                            srednee = srednee / vsego;
+
+                                            double num13 = 0.0;
+
+
+                                            for (int i = 0; i < 5; i++)
+                                                num13 += (double)((i + 1) * array.Where(x => x.AnswerText == (i + 1).ToString()).Count());
+
+
+
+                                            double num14 = num13 / num10;
+
+                                            double num8 = 0;
+                                            for (int index = 0; index < 5; ++index)
+                                            {
+                                                num8 += Math.Pow((double)(index + 1) - num14, 2.0) * (double)array.Where(x => x.AnswerText == (index + 1).ToString()).Count();
+                                            }
+
+                                            var disp = num8 / num10;
+                                            xlWorksheet3.Cell(row3, column2).Value = vsego;
+                                            xlWorksheet4.Cell(row3, column2).Value = srednee;
+
+                                            xlWorksheet5.Cell(row3, column2).Value = Math.Round(num8, 2);
+
+
+                                            ++column2;
                                         }
-                                        srednee = srednee / vsego;
-
-                                        double num13 = 0.0;
-
-
-                                        for (int i = 0; i < 5; i++)
-                                            num13 += (double)((i + 1) * array.Where(x => x.AnswerText == (i + 1).ToString()).Count());
-
-
-
-                                        double num14 = num13 / num10;
-
-                                        double num8 = 0;
-                                        for (int index = 0; index < 5; ++index)
+                                        else
                                         {
-                                            num8 += Math.Pow((double)(index + 1) - num14, 2.0) *  (double)array.Where(x => x.AnswerText == (index + 1).ToString()).Count();
+                                            xlWorksheet3.Cell(row3, column2).Value = 0;
+                                            xlWorksheet4.Cell(row3, column2).Value = 0;
+
+                                            xlWorksheet5.Cell(row3, column2).Value = 0;
+                                            ++column2;
                                         }
-
-                                        var disp = num8 / num10;
-                                        xlWorksheet3.Cell(row3, column2).Value = vsego;
-                                        xlWorksheet4.Cell(row3, column2).Value = srednee;
-
-                                        xlWorksheet5.Cell(row3, column2).Value = Math.Round(num8, 2);
-
-
-                                        ++column2;
                                     }
                                     else
                                     {
@@ -241,6 +253,7 @@ namespace MpdaTest.Controllers
                                         xlWorksheet4.Cell(row3, column2).Value = 0;
 
                                         xlWorksheet5.Cell(row3, column2).Value = 0;
+                                        ++column2;
                                     }
 
                                 }
@@ -387,20 +400,30 @@ namespace MpdaTest.Controllers
                                         themePassing.ID = itemThemeTable.ID;
                                         themePassing.Name = itemThemeTable.Text;
                                         themePassing.TableQues = new List<TableQuesPassing>();
+                                        
                                         foreach (var itemQuesTable in BD.question.Where(x => x.IDTable == Table.ID).ToList())
                                         {
                                             TableQuesPassing quesPassing = new TableQuesPassing();
                                             quesPassing.ID = itemQuesTable.ID;
                                             quesPassing.Name = itemQuesTable.Text;
-                                            var otv = BD.AnswerTheme.Where(x => x.IDTheme == itemThemeTable.ID && x.IDQuestion == itemQuesTable.ID).ToList();
-                                            quesPassing.Count = otv.Count();
-
-                                            foreach (var item in otv)
+                                            if (BD.AnswerTheme.Where(x => x.IDTheme == itemThemeTable.ID && x.IDQuestion == itemQuesTable.ID).Count()!=0)
                                             {
-                                                quesPassing.Sred += double.Parse(item.AnswerText);
-                                            }
+                                                var otv = BD.AnswerTheme.Where(x => x.IDTheme == itemThemeTable.ID && x.IDQuestion == itemQuesTable.ID).ToList();
+                                                quesPassing.Count = otv.Count();
 
-                                            quesPassing.Sred = quesPassing.Sred / otv.Count();
+                                                foreach (var item in otv)
+                                                {
+                                                    quesPassing.Sred += double.Parse(item.AnswerText);
+                                                }
+
+                                                quesPassing.Sred = quesPassing.Sred / otv.Count();
+                                            }
+                                            else
+                                            {
+                                                quesPassing.Count = 0;
+                                                quesPassing.Sred = 0;
+                                            }
+                                            
                                             themePassing.TableQues.Add(quesPassing);
 
                                         }
