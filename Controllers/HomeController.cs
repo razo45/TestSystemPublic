@@ -1750,7 +1750,8 @@ namespace MpdaTest.Controllers
                         }
                     }
                 }
-                BD.UserSelectTest.Where(x => x.Login.ToLower() == CoockiesChek().ToLower()).FirstOrDefault().BoolPassed = true;
+                var login = CoockiesChek().ToLower();
+                BD.UserSelectTest.Where(x => x.Login.ToLower() == login).FirstOrDefault().BoolPassed = true;
                 BD.SaveChanges();
 
 
@@ -1766,7 +1767,8 @@ namespace MpdaTest.Controllers
 
                 if (CoockiesChek() != null)
                 {
-                    var User = await BD.UserSelectTest.Where(x => x.Login.ToLower() == CoockiesChek().ToLower()).FirstOrDefaultAsync();
+                var login = CoockiesChek().ToLower();
+                    var User = await BD.UserSelectTest.Where(x => x.Login.ToLower() == login).FirstOrDefaultAsync();
 
                     var TestOpis = BD.OpisTheme.Where(x => x.IdTheme == User.TestID).FirstOrDefault();
                     var Test = BD.TestSistem.Where(x => x.ID == User.TestID).FirstOrDefault();
