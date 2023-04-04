@@ -198,14 +198,10 @@ namespace MpdaTest.Controllers
 
                                         if (array.Count() != 0)
                                         {
-                                            double num10 = 0.0;
-                                            for (int index = 0; index < 5; ++index)
-                                                num10 = num10 + array.Where(x => x.AnswerText == (index + 1).ToString()).Count();
 
-                                            var vsego = array.Count();
+                                            double vsego = array.Count();
 
                                             double srednee = 0;
-
                                             foreach (var item in array)
                                             {
                                                 srednee += double.Parse(item.AnswerText);
@@ -213,27 +209,21 @@ namespace MpdaTest.Controllers
                                             }
                                             srednee = srednee / vsego;
 
-                                            double num13 = 0.0;
+                                            double Disp = 0;
 
 
-                                            for (int i = 0; i < 5; i++)
-                                                num13 += (double)((i + 1) * array.Where(x => x.AnswerText == (i + 1).ToString()).Count());
-
-
-
-                                            double num14 = num13 / num10;
-
-                                            double num8 = 0;
-                                            for (int index = 0; index < 5; ++index)
+                                            for (int i = 1; i <= 5; i++)
                                             {
-                                                num8 += Math.Pow((double)(index + 1) - num14, 2.0) * (double)array.Where(x => x.AnswerText == (index + 1).ToString()).Count();
+                                                Disp += Math.Pow(i - srednee, 2) * array.Where(x => x.AnswerText == i.ToString()).Count();
+
                                             }
 
-                                            var disp = num8 / num10;
+                                            Disp = Disp / vsego;
+
                                             xlWorksheet3.Cell(row3, column2).Value = vsego;
                                             xlWorksheet4.Cell(row3, column2).Value = srednee;
 
-                                            xlWorksheet5.Cell(row3, column2).Value = Math.Round(num8, 2);
+                                            xlWorksheet5.Cell(row3, column2).Value = Math.Round(Disp, 2);
 
 
                                             ++column2;
@@ -400,13 +390,13 @@ namespace MpdaTest.Controllers
                                         themePassing.ID = itemThemeTable.ID;
                                         themePassing.Name = itemThemeTable.Text;
                                         themePassing.TableQues = new List<TableQuesPassing>();
-                                        
+
                                         foreach (var itemQuesTable in BD.question.Where(x => x.IDTable == Table.ID).ToList())
                                         {
                                             TableQuesPassing quesPassing = new TableQuesPassing();
                                             quesPassing.ID = itemQuesTable.ID;
                                             quesPassing.Name = itemQuesTable.Text;
-                                            if (BD.AnswerTheme.Where(x => x.IDTheme == itemThemeTable.ID && x.IDQuestion == itemQuesTable.ID).Count()!=0)
+                                            if (BD.AnswerTheme.Where(x => x.IDTheme == itemThemeTable.ID && x.IDQuestion == itemQuesTable.ID).Count() != 0)
                                             {
                                                 var otv = BD.AnswerTheme.Where(x => x.IDTheme == itemThemeTable.ID && x.IDQuestion == itemQuesTable.ID).ToList();
                                                 quesPassing.Count = otv.Count();
@@ -423,7 +413,7 @@ namespace MpdaTest.Controllers
                                                 quesPassing.Count = 0;
                                                 quesPassing.Sred = 0;
                                             }
-                                            
+
                                             themePassing.TableQues.Add(quesPassing);
 
                                         }
