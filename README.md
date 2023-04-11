@@ -25,7 +25,7 @@ git clone https://github.com/razo45/TestSystemPublic.git
 
 3. Установить все необходимые зависимости, используя NuGet.
 
-4. Создать базу данных через бэкап `Sql.bak` или через скрип `Sql.script`
+4. Создать базу данных через бэкап `BackUp` или через скрип `script.sql`
 
 5. изменить строку модключения в 'Model1.cs'
 
