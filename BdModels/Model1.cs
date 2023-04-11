@@ -8,9 +8,7 @@ namespace MpdaTest.BdModels
     public partial class Model1 : DbContext
     {
         public Model1()
-
-           : base("data source=31.31.196.234;initial catalog=u1723122_TestSis;persist security info=True;user id=u1723122_u1723122;password=CVhXN2Mun60yLT1N;MultipleActiveResultSets=True;App=EntityFramework")
-          // : base("data source=localhost;initial catalog=u1723122_TestSis;persist security info=True;user id=u1723122_u1723122;password=CVhXN2Mun60yLT1N;MultipleActiveResultSets=True;App=EntityFramework")
+                : base("data source=localhost;initial catalog=[DataBase_Name];persist security info=True;user id=[User_Nmae];password=[Password_User];MultipleActiveResultSets=True;App=EntityFramework")
         {
         }
 
