@@ -431,7 +431,7 @@ namespace MpdaTest.Controllers
 
                         }
                     }
-                    BD.SaveChangesAsync();
+                   await BD.SaveChangesAsync();
                     passingTest.passingThemes.Add(passingThemeModel);
 
 
@@ -1940,7 +1940,7 @@ namespace MpdaTest.Controllers
 
                         }
                     }
-                    BD.SaveChangesAsync();
+                   await BD.SaveChangesAsync();
                     passingTest.passingThemes.Add(passingThemeModel);
 
 
